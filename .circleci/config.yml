@@ -1,0 +1,24 @@
+version: 2
+
+jobs:
+  build_cronut:
+    docker:
+      - image: docker:18.02
+    environment:
+      APP: cronut
+    steps:
+      - checkout
+      - run:
+          name: Build docker image
+          command: |
+            cd $APP
+            docker build \
+            -t scalableminds/$APP:${CIRCLE_BRANCH}__${COMMON_BUILD_NUM} \
+            -t scalableminds/$APP:${CIRCLE_BRANCH} \
+            .
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - build_cronut
