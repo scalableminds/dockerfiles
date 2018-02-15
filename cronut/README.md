@@ -2,6 +2,8 @@
 
 Docker image for [cronut](https://github.com/harrystech/cronut).
 
+![Docker Hub Badge](http://dockeri.co/image/scalableminds/cronut)
+
 This currently uses sqlite to simplify the setup.
 
 ## Usage:
