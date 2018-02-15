@@ -8,6 +8,7 @@ jobs:
       APP: cronut
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build docker image
           command: |
