@@ -7,7 +7,7 @@ RUN apk update \
  && apk upgrade \
  && apk add --upgrade --no-cache \
         ca-certificates \
-        ruby-full ruby-irb \
+        ruby ruby-etc ruby-irb ruby-webrick \
         su-exec==${SU_EXEC_VERSION}-r0 \
         dumb-init==${DUMB_INIT_VERSION}-r0 \
         --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
