@@ -11,6 +11,7 @@ jobs:
           name: Build docker images
           command: |
             for APP in */; do
+              APP="${APP%/}"
               cd $APP
               docker build \
                 -t scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM} \
