@@ -2,16 +2,16 @@ FROM fluent/fluentd:v1.1.3
 
 # Adapted from
 # https://github.com/fluent/fluentd-docker-image/blob/master/v1.1/alpine/Dockerfile#L17-L34
-# using the apk edge repository
+# using the apk edge repository and ruby-full
 RUN apk update \
  && apk upgrade \
- && apk add --no-cache \
+ && apk add --upgrade --no-cache \
         ca-certificates \
-        ruby ruby-irb \
+        ruby-full ruby-irb \
         su-exec==${SU_EXEC_VERSION}-r0 \
         dumb-init==${DUMB_INIT_VERSION}-r0 \
         --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
- && apk add --no-cache --virtual .build-deps \
+ && apk add --upgrade --no-cache --virtual .build-deps \
         build-base \
         ruby-dev wget gnupg \
         --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
