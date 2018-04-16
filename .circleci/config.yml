@@ -1,25 +1,35 @@
 version: 2
 
 jobs:
-  build_cronut:
+  build_push:
     docker:
       - image: docker:18.02
-    environment:
-      APP: cronut
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build docker image
+          name: Build docker images
           command: |
-            cd $APP
-            docker build \
-            -t scalableminds/$APP:${CIRCLE_BRANCH}__${COMMON_BUILD_NUM} \
-            -t scalableminds/$APP:${CIRCLE_BRANCH} \
-            .
+            for APP in */; do
+              pushd $APP
+              docker build \
+                -t scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM} \
+                -t scalableminds/$APP:${CIRCLE_BRANCH} \
+                .
+              popd
+            done
+      - run:
+          name: Push docker images
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            for APP in */; do
+              docker push scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}
+              docker push scalableminds/$APP:${CIRCLE_BRANCH}
+            done
+            docker logout
 
 workflows:
   version: 2
   default:
     jobs:
-      - build_cronut
+      - build_push
