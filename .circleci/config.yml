@@ -8,14 +8,17 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Install build packages
+          command: apk --no-cache add bash pcre-tools
+      - run:
           name: Build docker images
           command: |
-            for APP in */; do
-              APP="${APP%/}"
+            for APP in $(./get_valid_order.sh); do
               cd $APP
               docker build \
                 -t scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM} \
                 -t scalableminds/$APP:${CIRCLE_BRANCH} \
+                -t scalableminds/$APP \
                 .
               cd ..
             done
