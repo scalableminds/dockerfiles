@@ -22,3 +22,6 @@ RUN sbt sbtVersion
 RUN chmod -R 777 /root
 
 CMD sbt sbtVersion
+
+# for wk:
+RUN apk --no-cache add yarn

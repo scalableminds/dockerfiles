@@ -19,3 +19,6 @@ RUN echo "" > /etc/profile
 ENV PATH /usr/local/graalvm/bin:${PATH}
 
 CMD java -version
+
+# for wk:
+RUN apk --no-cache add 'postgresql-client~10'
