@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+CI="${CI-false}"
+
 for APP in $(./get_valid_order.sh); do
   cd $APP
 	EXTRA_TAGS=""
