@@ -7,3 +7,5 @@ Docker images used within scalableminds :whale:
 ## Images
 
 * [cronut](cronut)
+* [fluentd](fluentd)
+* [helm](helm)
