@@ -16,7 +16,7 @@ RUN apk --no-cache add --virtual build curl && \
 # /etc/profile overwrites the path, which is undesired.
 RUN echo "" > /etc/profile
 
-ENV PATH /usr/local/graalvm/bin:${PATH}
+ENV PATH ${PATH}:/usr/local/graalvm/bin
 
 CMD java -version
 
