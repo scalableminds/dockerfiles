@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM scalableminds/alpine
 
 ARG GRAALVM_VERSION="1.0.0-rc1"
 
@@ -12,9 +12,6 @@ RUN apk --no-cache add --virtual build curl && \
     rm -f /usr/local/graalvm-${GRAALVM_VERSION}/src.zip && \
     ln -s /usr/local/graalvm-${GRAALVM_VERSION} /usr/local/graalvm && \
     apk del build
-
-# /etc/profile overwrites the path, which is undesired.
-RUN echo "" > /etc/profile
 
 ENV PATH ${PATH}:/usr/local/graalvm/bin
 
