@@ -23,14 +23,14 @@ jobs:
               docker push scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM} || {
                 docker tag \
                   scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM} \
-                  scalableminds/various:$APP__${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}
-                docker push scalableminds/various:$APP__${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}
+                  scalableminds/various:${APP}__${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}
+                docker push scalableminds/various:${APP}__${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}
               }
               docker push scalableminds/$APP:${CIRCLE_BRANCH} || {
                 docker tag \
                   scalableminds/$APP:${CIRCLE_BRANCH} \
-                  scalableminds/various:$APP__${CIRCLE_BRANCH}
-                docker push scalableminds/various:$APP__${CIRCLE_BRANCH}
+                  scalableminds/various:${APP}__${CIRCLE_BRANCH}
+                docker push scalableminds/various:${APP}__${CIRCLE_BRANCH}
               }
             done
             docker logout
