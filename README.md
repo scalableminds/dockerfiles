@@ -6,10 +6,12 @@ Docker images used within scalableminds :whale:
 
 ## Images
 
-* [alpine](alpine)
-* [cronut](cronut)
-* [fluentd](fluentd)
-* [graalvm](graalvm)
-* [helm](helm)
-* [kubectl](kubectl)
-* [sbt](sbt)
+|   | stats | dockerhub |
+|---|  ---  |    ---    |
+| [alpine](alpine)   | [![](https://images.microbadger.com/badges/image/scalableminds/alpine:master.svg)](https://microbadger.com/images/scalableminds/alpine:master)   | [scalableminds/various:alpine__…](https://hub.docker.com/r/scalableminds/various/tags/) |
+| [cronut](cronut)   | [![](https://images.microbadger.com/badges/image/scalableminds/cronut:master.svg)](https://microbadger.com/images/scalableminds/cronut:master)   | [scalableminds/cronut](https://hub.docker.com/r/scalableminds/cronut/tags/) |
+| [fluentd](fluentd) | [![](https://images.microbadger.com/badges/image/scalableminds/fluentd:master.svg)](https://microbadger.com/images/scalableminds/fluentd:master) | [scalableminds/fluentd](https://hub.docker.com/r/scalableminds/fluentd/tags/) |
+| [graalvm](graalvm) | [![](https://images.microbadger.com/badges/image/scalableminds/graalvm:master.svg)](https://microbadger.com/images/scalableminds/graalvm:master) | [scalableminds/graalvm](https://hub.docker.com/r/scalableminds/graalvm/tags/) |
+| [helm](helm)       | [![](https://images.microbadger.com/badges/image/scalableminds/helm:master.svg)](https://microbadger.com/images/scalableminds/helm:master)       | [scalableminds/helm](https://hub.docker.com/r/scalableminds/helm/tags/) |
+| [kubectl](kubectl) | [![](https://images.microbadger.com/badges/image/scalableminds/kubectl:master.svg)](https://microbadger.com/images/scalableminds/kubectl:master) | [scalableminds/kubectl](https://hub.docker.com/r/scalableminds/kubectl/tags/) |
+| [sbt](sbt)         | [![](https://images.microbadger.com/badges/image/scalableminds/sbt:master.svg)](https://microbadger.com/images/scalableminds/sbt:master)         | [scalableminds/sbt](https://hub.docker.com/r/scalableminds/sbt/tags/) |
