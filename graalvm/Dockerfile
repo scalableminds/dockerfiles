@@ -15,7 +15,5 @@ RUN apk --no-cache add --virtual build curl && \
 
 ENV PATH ${PATH}:/usr/local/graalvm/bin
 
-CMD java -version
-
 # for wk:
 RUN apk --no-cache add 'postgresql-client~10'
