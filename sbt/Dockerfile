@@ -18,10 +18,8 @@ WORKDIR /app/
 
 # this allows to specify a random user via docker:
 ENV SBT_OPTS '-Dsbt.global.base=/root/.sbt/  -Dsbt.ivy.home=/root/.ivy2/  -Divy.home=/root/.ivy2/'
-RUN sbt sbtVersion
+RUN sbt sbtVersion # this adds sbt to the cache
 RUN chmod -R 777 /root
-
-CMD sbt sbtVersion
 
 # for wk:
 RUN apk --no-cache add yarn
