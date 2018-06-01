@@ -6,8 +6,10 @@ Docker images used within scalableminds :whale:
 
 ## Images
 
+* [alpine](alpine)
 * [cronut](cronut)
 * [fluentd](fluentd)
+* [graalvm](graal)
 * [helm](helm)
 * [kubectl](kubectl)
-
+* [sbt](sbt)
