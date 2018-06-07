@@ -1,6 +1,6 @@
 FROM scalableminds/alpine
 
-ARG GRAALVM_VERSION="1.0.0-rc1"
+ARG GRAALVM_VERSION="1.0.0-rc2"
 
 RUN apk --allow-untrusted --no-cache \
     -X https://apkproxy.herokuapp.com/andyshinn/alpine-pkg-glibc \
