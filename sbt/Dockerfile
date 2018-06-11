@@ -22,4 +22,4 @@ RUN sbt sbtVersion # this adds sbt to the cache
 RUN chmod -R 777 /root
 
 # for wk:
-RUN apk --no-cache add yarn findutils
+RUN apk --no-cache add findutils 'postgresql-client~10' yarn
