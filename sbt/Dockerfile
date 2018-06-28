@@ -1,4 +1,6 @@
-FROM scalableminds/graalvm
+FROM scalableminds/alpine
+
+RUN apk --no-cache add openjdk8
 
 ENV SBT_VERSION 0.13.15
 
