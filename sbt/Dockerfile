@@ -1,27 +1,40 @@
-FROM scalableminds/alpine
+FROM openjdk:8-jdk
 
-RUN apk --no-cache add openjdk8
+ARG VERSION_SBT="0.13.15"
+ARG VERSION_NODE="8.x"
 
-ENV SBT_VERSION 0.13.15
+ENV DEBIAN_FRONTEND noninteractive
 
-RUN apk --no-cache add bash
-SHELL ["/bin/bash", "-c"]
+# add node package source
+RUN curl -sL "https://deb.nodesource.com/setup_${VERSION_NODE}" | bash -
 
-RUN apk --no-cache add --virtual build curl && \
-    curl -Ls "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" | \
-    tar zx -C /usr/local/ && \
-    ln -s /usr/local/sbt-${SBT_VERSION} /usr/local/sbt && \
-    apk del build
+# add yarn package source
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
+  && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 
-ENV PATH /usr/local/sbt/bin:${PATH}
+# add sbt package source
+RUN echo "deb https://dl.bintray.com/sbt/debian /" > /etc/apt/sources.list.d/sbt.list \
+  && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+
+# Install sbt, node & build-essentials
+RUN apt-get update \
+  && apt-get install -y \
+      build-essential \
+      findutils \
+      nodejs \
+      postgresql-client \
+      sbt="${VERSION_SBT}" \
+      yarn \
+  # The following packages are necessary to run headless-gl
+  && apt-get install -y \
+      mesa-utils xvfb libgl1-mesa-dri libglapi-mesa libosmesa6 pkg-config x11proto-xext-dev xserver-xorg-dev libxext-dev libxi-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir /app && chmod 777 /app
 WORKDIR /app/
 
-# this allows to specify a random user via docker:
+# allowing to specify a random user via docker:
 ENV SBT_OPTS '-Dsbt.global.base=/root/.sbt/  -Dsbt.ivy.home=/root/.ivy2/  -Divy.home=/root/.ivy2/'
-RUN sbt sbtVersion # this adds sbt to the cache
+RUN sbt sbtVersion # adding sbt to the cache
 RUN chmod -R 777 /root
-
-# for wk:
-RUN apk --no-cache add findutils 'postgresql-client~10' yarn
