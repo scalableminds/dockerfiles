@@ -1,18 +1,14 @@
 FROM openjdk:8-jdk
 
-ARG VERSION_SBT="0.13.15"
+ARG VERSION_SBT="0.13.17"
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update \
-  && apt-get install apt-transport-https \
-  && echo "deb https://dl.bintray.com/sbt/debian /" > /etc/apt/sources.list.d/sbt.list \
-  && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 \
-  && apt-get update \
-  && apt-get install -y \
-      sbt="${VERSION_SBT}" \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN curl -Ls "https://github.com/sbt/sbt/releases/download/v${VERSION_SBT}/sbt-${VERSION_SBT}.tgz" | \
+    tar zx -C /usr/local/ && \
+    ln -s /usr/local/sbt-${VERSION_SBT} /usr/local/sbt
+
+ENV PATH /usr/local/sbt/bin:${PATH}
 
 RUN mkdir /app && chmod 777 /app
 WORKDIR /app/
