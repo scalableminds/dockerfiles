@@ -14,6 +14,6 @@ RUN mkdir /app && chmod 777 /app
 WORKDIR /app/
 
 # allowing to specify a random user via docker:
-ENV SBT_OPTS '-Dsbt.global.base=/root/.sbt/  -Dsbt.ivy.home=/root/.ivy2/  -Divy.home=/root/.ivy2/'
+ENV SBT_OPTS "-Dsbt.global.base=/root/.sbt/${VERSION_SBT%.*}  -Dsbt.ivy.home=/root/.ivy2/  -Divy.home=/root/.ivy2/"
 RUN sbt sbtVersion # adding sbt to the cache
 RUN chmod -R 777 /root
