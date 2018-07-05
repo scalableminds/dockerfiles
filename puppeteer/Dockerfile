@@ -10,12 +10,11 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
     && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst ttf-freefont \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge --auto-remove -y curl \
     && rm -rf /src/*.deb
 
 # It's a good idea to use dumb-init to help prevent zombie chrome processes.
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
+RUN curl -Ls -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 \
+    && chmod +x /usr/local/bin/dumb-init
 
 # Uncomment to skip the chromium download when installing puppeteer. If you do,
 # you'll need to launch puppeteer with:
