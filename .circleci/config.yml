@@ -17,6 +17,8 @@ jobs:
       - run:
           name: Push docker images
           command: |
+            set -Eeuo pipefail
+
             does_repo_exist() {
               curl --silent -f -lSL https://index.docker.io/v1/repositories/scalableminds/$1/tags > /dev/null
             }
@@ -26,7 +28,7 @@ jobs:
               if does_repo_exist $APP; then
                 docker push scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}
                 docker push scalableminds/$APP:${CIRCLE_BRANCH}
-                eval "MICROBADGER_HOOK=MICROBADGER_HOOK_\${$APP}"
+                eval "MICROBADGER_HOOK=\$MICROBADGER_HOOK_$APP"
                 curl --silent -f -lSL -X POST $MICROBADGER_HOOK
               else
                 docker tag \
@@ -39,8 +41,7 @@ jobs:
                 docker push scalableminds/various:${APP}__${CIRCLE_BRANCH}
               fi
             done
-            MICROBADGER_HOOK_various
-            curl --silent -f -lSL -X POST MICROBADGER_HOOK_various
+            curl --silent -f -lSL -X POST $MICROBADGER_HOOK_various
             docker logout
 
 workflows:
