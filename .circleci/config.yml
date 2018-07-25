@@ -16,9 +16,8 @@ jobs:
             ./build.sh
       - run:
           name: Push docker images
+          shell: /bin/bash -Eeuo pipefail
           command: |
-            set -Eeuo pipefail
-
             does_repo_exist() {
               curl --silent -f -lSL https://index.docker.io/v1/repositories/scalableminds/$1/tags > /dev/null
             }
