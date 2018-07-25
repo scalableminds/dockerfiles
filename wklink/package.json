@@ -1,0 +1,17 @@
+{
+  "name": "wklink",
+  "version": "1.0.0",
+  "description": "URL redirection service",
+  "main": "index.js",
+  "author": "Norman Rzepka <norman.rzepka@scalableminds.com>",
+  "license": "MIT",
+  "dependencies": {
+    "micro": "^9.3.2"
+  },
+  "devDependencies": {
+    "prettier": "^1.13.7"
+  },
+  "scripts": {
+    "start": "micro"
+  }
+}
