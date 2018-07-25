@@ -1,0 +1,5 @@
+4871:https://demo.webknossos.org/annotations/Explorational/5b55dbaa1c0000bd008c0e80/readOnly#5149,653,57,0,2.42
+1697:https://demo.webknossos.org/annotations/Explorational/5b55e9bb1c000072018c0e9b/readOnly#4944,948,55,0,0.85
+4812:https://demo.webknossos.org/annotations/Explorational/5b55e9bb1c000072018c0e9b/readOnly#4911,904,55,0,0.13
+6751:https://demo.webknossos.org/annotations/Explorational/5b55f2a51c00007b018c0eae/readOnly#21417,21706,312,0,22.69
+9311:https://demo.webknossos.org/annotations/Explorational/5b55f8ec1c000066018c0ebf/readOnly#22927,25213,272,0,0.73,12042

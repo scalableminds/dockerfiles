@@ -17,6 +17,7 @@ Docker images used within scalableminds :whale:
 | [kubectl](kubectl)     | [![](https://images.microbadger.com/badges/image/scalableminds/kubectl:master.svg)](https://microbadger.com/images/scalableminds/kubectl:master)     | [scalableminds/kubectl]   |
 | [puppeteer](puppeteer) | [![](https://images.microbadger.com/badges/image/scalableminds/puppeteer:master.svg)](https://microbadger.com/images/scalableminds/puppeteer:master) | [scalableminds/puppeteer] |
 | [sbt](sbt)             | [![](https://images.microbadger.com/badges/image/scalableminds/sbt:master.svg)](https://microbadger.com/images/scalableminds/sbt:master)             | [scalableminds/sbt]       |
+| [wklink](wklink)      | [![](https://images.microbadger.com/badges/image/scalableminds/wklink:master.svg)](https://microbadger.com/images/scalableminds/wklink:master)             | [scalableminds/wklink]       |
 
 [scalableminds/various:alpine__…](https://hub.docker.com/r/scalableminds/various/tags/)
 [scalableminds/cronut](https://hub.docker.com/r/scalableminds/cronut/tags/)
@@ -26,3 +27,4 @@ Docker images used within scalableminds :whale:
 [scalableminds/kubectl]: https://hub.docker.com/r/scalableminds/kubectl/tags/
 [scalableminds/puppeteer]: https://hub.docker.com/r/scalableminds/puppeteer/tags/
 [scalableminds/sbt]: https://hub.docker.com/r/scalableminds/sbt/tags/
+[scalableminds/wklink]: https://hub.docker.com/r/scalableminds/wklink/tags/
