@@ -18,10 +18,12 @@ Docker images used within scalableminds :whale:
 | [puppeteer](puppeteer) | [![](https://images.microbadger.com/badges/image/scalableminds/puppeteer:master.svg)](https://microbadger.com/images/scalableminds/puppeteer:master) | [scalableminds/puppeteer] |
 | [sbt](sbt)             | [![](https://images.microbadger.com/badges/image/scalableminds/sbt:master.svg)](https://microbadger.com/images/scalableminds/sbt:master)             | [scalableminds/sbt]       |
 
-[scalableminds/various:alpine__…](https://hub.docker.com/r/scalableminds/various/tags/)
-[scalableminds/cronut](https://hub.docker.com/r/scalableminds/cronut/tags/)
-[scalableminds/fluentd](https://hub.docker.com/r/scalableminds/fluentd/tags/)
-[scalableminds/graalvm](https://hub.docker.com/r/scalableminds/graalvm/tags/)
+
+[scalableminds/various:alpine__…]: https://hub.docker.com/r/scalableminds/various/tags/
+[scalableminds/cronut]: https://hub.docker.com/r/scalableminds/cronut/tags/
+[scalableminds/duply]: https://hub.docker.com/r/scalableminds/duply/tags/
+[scalableminds/fluentd]: https://hub.docker.com/r/scalableminds/fluentd/tags/
+[scalableminds/graalvm]: https://hub.docker.com/r/scalableminds/graalvm/tags/
 [scalableminds/helm]: https://hub.docker.com/r/scalableminds/helm/tags/
 [scalableminds/kubectl]: https://hub.docker.com/r/scalableminds/kubectl/tags/
 [scalableminds/puppeteer]: https://hub.docker.com/r/scalableminds/puppeteer/tags/
