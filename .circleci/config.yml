@@ -15,6 +15,10 @@ jobs:
           command: |
             ./build.sh
       - run:
+          name: Run tests
+          command: |
+            ./test.sh
+      - run:
           name: Push docker images
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
