@@ -25,7 +25,6 @@ function cleanup {
 trap cleanup EXIT
 
 # create dummy data
-docker exec tester ls
 docker exec tester bash -c 'echo "Backup Me!" > /to_backup/file_to_backup.txt'
 
 # backup
