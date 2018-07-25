@@ -8,8 +8,8 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Install build packages
-          command: apk --no-cache add bash pcre-tools
+          name: Install packages
+          command: apk --no-cache add bash curl pcre-tools
       - run:
           name: Build docker images
           command: |
