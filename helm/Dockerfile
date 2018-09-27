@@ -3,7 +3,7 @@ FROM alpine:3.6
 ENV HELM_VERSION="v2.9.0"
 
 RUN apk add --no-cache bash ca-certificates coreutils curl findutils grep git python3 wget openssh \
-    && pip3 install aiohttp 'multidict==4.3.1' github-webhook pyyaml 'ruamel.yaml<=0.15' slackweb \
+    && pip3 install aiohttp github-webhook pyyaml 'ruamel.yaml<=0.15' slackweb \
     && wget http://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && tar -xvf helm-${HELM_VERSION}-linux-amd64.tar.gz linux-amd64/helm \
     && mv linux-amd64/helm /usr/local/bin/helm \
