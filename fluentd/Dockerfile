@@ -1,4 +1,4 @@
-FROM fluent/fluentd:v1.1.3
+FROM fluent/fluentd:stable
 
 # Adapted from
 # https://github.com/fluent/fluentd-docker-image/blob/master/v1.1/alpine/Dockerfile#L17-L34
