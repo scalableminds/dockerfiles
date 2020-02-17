@@ -28,6 +28,9 @@ jobs:
 
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             for APP in $(./get_valid_order.sh); do
+              echo ""
+              echo "####### ${APP} #######"
+              echo ""
               if does_repo_exist $APP; then
                 docker push scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}
                 docker push scalableminds/$APP:${CIRCLE_BRANCH}
