@@ -34,7 +34,7 @@ jobs:
               if does_repo_exist $APP; then
                 docker push scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}
                 docker push scalableminds/$APP:${CIRCLE_BRANCH}
-                eval "MICROBADGER_HOOK=\$MICROBADGER_HOOK_$APP"
+                eval "MICROBADGER_HOOK=\$MICROBADGER_HOOK_${APP/-/}"
                 curl --silent -f -lSL -X POST $MICROBADGER_HOOK
               else
                 docker tag \
