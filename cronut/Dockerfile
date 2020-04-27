@@ -4,7 +4,7 @@ WORKDIR /
 RUN apk --no-cache add git
 RUN git clone https://github.com/harrystech/cronut.git
 
-FROM ruby:2.5-alpine3.7
+FROM ruby:2.5.7-alpine3.10
 
 RUN mkdir /cronut
 WORKDIR /cronut
