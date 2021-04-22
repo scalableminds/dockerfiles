@@ -10,8 +10,8 @@ for APP in $(./get_valid_order.sh); do
   cd $APP
   EXTRA_TAGS=""
   if [[ "$CI" == "true" ]]; then
-    EXTRA_TAGS="$EXTRA_TAGS -t scalableminds/$APP:${CIRCLE_BRANCH}__${CIRCLE_BUILD_NUM}"
-    EXTRA_TAGS="$EXTRA_TAGS -t scalableminds/$APP:${CIRCLE_BRANCH}"
+    EXTRA_TAGS="$EXTRA_TAGS -t scalableminds/$APP:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID}"
+    EXTRA_TAGS="$EXTRA_TAGS -t scalableminds/$APP:${NORMALIZED_CI_BRANCH}"
   fi
   docker build \
     $EXTRA_TAGS \
