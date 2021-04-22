@@ -3,7 +3,7 @@ version: 2
 jobs:
   build_push:
     docker:
-      - image: docker:18.02
+      - image: docker:20.10
     steps:
       - checkout
       - setup_remote_docker
