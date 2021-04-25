@@ -36,8 +36,9 @@ module.exports = async (req, res) => {
     .map(line => line.trim());
   for (const link of links) {
     if (link.startsWith(`${tag}:`)) {
-      const linkUrl = link.substring(tag.length + 1);
-      redirect(res, 301, linkUrl);
+      const linkUrl = new URL(link.substring(tag.length + 1));
+      linkUrl.searchParams.append("utm_source", "wklink");
+      redirect(res, 301, linkUrl.toString());
       return;
     }
   }
