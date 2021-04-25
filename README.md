@@ -2,7 +2,7 @@
 
 Docker images used within scalableminds :whale: 
 
-[![CircleCI](https://circleci.com/gh/scalableminds/dockerfiles.svg?style=svg)](https://circleci.com/gh/scalableminds/dockerfiles)
+[![CI](https://github.com/scalableminds/dockerfiles/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/scalableminds/dockerfiles/actions/workflows/main.yml)
 
 ## Images
 
