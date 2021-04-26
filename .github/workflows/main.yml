@@ -37,8 +37,6 @@ jobs:
           if does_repo_exist $APP; then
             docker push scalableminds/$APP:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID}
             docker push scalableminds/$APP:${NORMALIZED_CI_BRANCH}
-            # eval "MICROBADGER_HOOK=\$MICROBADGER_HOOK_${APP/-/}"
-            # curl --silent -f -lSL -X POST $MICROBADGER_HOOK
           else
             docker tag \
               scalableminds/$APP:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID} \
@@ -50,5 +48,4 @@ jobs:
             docker push scalableminds/various:${APP}__${NORMALIZED_CI_BRANCH}
           fi
         done
-        # curl --silent -f -lSL -X POST $MICROBADGER_HOOK_various
         docker logout

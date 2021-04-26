@@ -6,19 +6,19 @@ Docker images used within scalableminds :whale:
 
 ## Images
 
-|   | stats | dockerhub |
-|---|  ---  |    ---    |
-| [alpine](alpine)           | [![](https://images.microbadger.com/badges/image/scalableminds/various:alpine__master.svg)](https://microbadger.com/images/scalableminds/various:alpine__master) | [scalableminds/various:alpine__…] |
-| [cronut](cronut)           | [![](https://images.microbadger.com/badges/image/scalableminds/cronut:master.svg)](https://microbadger.com/images/scalableminds/cronut:master)                   | [scalableminds/cronut]            |
-| [duply](duply)             | [![](https://images.microbadger.com/badges/image/scalableminds/duply:master.svg)](https://microbadger.com/images/scalableminds/duply:master)                     | [scalableminds/duply]             |
-| [fluentd](fluentd)         | [![](https://images.microbadger.com/badges/image/scalableminds/fluentd:master.svg)](https://microbadger.com/images/scalableminds/fluentd:master)                 | [scalableminds/fluentd]           |
-| [graalvm](graalvm)         | [![](https://images.microbadger.com/badges/image/scalableminds/graalvm:master.svg)](https://microbadger.com/images/scalableminds/graalvm:master)                 | [scalableminds/graalvm]           |
-| [helm](helm)               | [![](https://images.microbadger.com/badges/image/scalableminds/helm:master.svg)](https://microbadger.com/images/scalableminds/helm:master)                       | [scalableminds/helm]              |
-| [kubectl](kubectl)         | [![](https://images.microbadger.com/badges/image/scalableminds/kubectl:master.svg)](https://microbadger.com/images/scalableminds/kubectl:master)                 | [scalableminds/kubectl]           |
-| [nginx-proxy](nginx-proxy) | [![](https://images.microbadger.com/badges/image/scalableminds/nginx-proxy:master.svg)](https://microbadger.com/images/scalableminds/nginx-proxy:master)         | [scalableminds/nginx-proxy]       |
-| [puppeteer](puppeteer)     | [![](https://images.microbadger.com/badges/image/scalableminds/puppeteer:master.svg)](https://microbadger.com/images/scalableminds/puppeteer:master)             | [scalableminds/puppeteer]         |
-| [sbt](sbt)                 | [![](https://images.microbadger.com/badges/image/scalableminds/sbt:master.svg)](https://microbadger.com/images/scalableminds/sbt:master)                         | [scalableminds/sbt]               |
-| [wklink](wklink)           | [![](https://images.microbadger.com/badges/image/scalableminds/wklink:master.svg)](https://microbadger.com/images/scalableminds/wklink:master)                   | [scalableminds/wklink]            |
+|   | dockerhub |
+|---|    ---    |
+| [alpine](alpine)           | [scalableminds/various:alpine__…] |
+| [cronut](cronut)           | [scalableminds/cronut]            |
+| [duply](duply)             | [scalableminds/duply]             |
+| [fluentd](fluentd)         | [scalableminds/fluentd]           |
+| [graalvm](graalvm)         | [scalableminds/graalvm]           |
+| [helm](helm)               | [scalableminds/helm]              |
+| [kubectl](kubectl)         | [scalableminds/kubectl]           |
+| [nginx-proxy](nginx-proxy) | [scalableminds/nginx-proxy]       |
+| [puppeteer](puppeteer)     | [scalableminds/puppeteer]         |
+| [sbt](sbt)                 | [scalableminds/sbt]               |
+| [wklink](wklink)           | [scalableminds/wklink]            |
 
 
 [scalableminds/various:alpine__…]: https://hub.docker.com/r/scalableminds/various/tags/
