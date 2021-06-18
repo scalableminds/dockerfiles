@@ -1,4 +1,4 @@
-FROM jwilder/nginx-proxy
+FROM nginxproxy/nginx-proxy
 
 RUN { \
       echo 'proxy_read_timeout 3600s;'; \
