@@ -61,7 +61,7 @@ app.get("/health", (req, res) => {
 });
 app.get("*", async (req, res) => {
   try {
-    const justPath = decodeURI(req.path.replace(/^\//, ""));
+    const justPath = decodeURI(req.path.replace(/^\//, "").replace(/\/$/, ""));
     if (await tryReadFile(justPath, res)) {
       return;
     }
