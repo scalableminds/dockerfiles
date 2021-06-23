@@ -1,0 +1,19 @@
+{
+  "name": "s3-proxy",
+  "version": "1.0.0",
+  "description": "Proxies an S3 bucket",
+  "main": "index.js",
+  "author": "Norman Rzepka <norman.rzepka@scalableminds.com>",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.932.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.1"
+  },
+  "scripts": {
+    "start": "micro"
+  }
+}
