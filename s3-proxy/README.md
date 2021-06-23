@@ -11,3 +11,4 @@ Make sure to set the following environment variables:
 - `AWS_DEFAULT_REGION`
 - `S3_BUCKET`
 - `S3_BUCKET_PREFIX` (optional)
+- `PORT` (optional)
