@@ -16,32 +16,41 @@ async function tryReadFile(filepath, res) {
         Key: `${S3_BUCKET_PREFIX}${filepath}`,
       })
       .promise();
-
-    if (obj.ContentType != null) {
-      res.set("Content-Type", obj.ContentType);
-    }
-    if (obj.ContentLength != null) {
-      res.set("Content-Length", obj.ContentLength);
-    }
-    if (obj.ContentEncoding != null) {
-      res.set("Content-Encoding", obj.ContentEncoding);
-    }
-    if (obj.ContentDisposition != null) {
-      res.set("Content-Disposition", obj.ContentDisposition);
-    }
-    if (obj.ETag != null) {
-      res.set("ETag", obj.ETag);
-    }
-    if (obj.Expires != null) {
-      res.set("Expires", obj.Expires);
-    }
-    if (obj.CacheControl != null) {
-      res.set("Cache-Control", obj.CacheControl);
-    }
     if (obj.WebsiteRedirectLocation != null) {
-      res.set("Location", obj.WebsiteRedirectLocation);
+      if (obj.WebsiteRedirectLocation.startsWith(`/${S3_BUCKET_PREFIX}`)) {
+        res.redirect(
+          `/${obj.WebsiteRedirectLocation.substring(
+            1 + S3_BUCKET_PREFIX.length
+          )}`
+        );
+      } else {
+        res.redirect(obj.WebsiteRedirectLocation);
+      }
+    } else {
+      if (obj.ContentType != null) {
+        res.set("Content-Type", obj.ContentType);
+      }
+      if (obj.ContentLength != null) {
+        res.set("Content-Length", obj.ContentLength);
+      }
+      if (obj.ContentEncoding != null) {
+        res.set("Content-Encoding", obj.ContentEncoding);
+      }
+      if (obj.ContentDisposition != null) {
+        res.set("Content-Disposition", obj.ContentDisposition);
+      }
+      if (obj.ETag != null) {
+        res.set("ETag", obj.ETag);
+      }
+      if (obj.Expires != null) {
+        res.set("Expires", obj.Expires);
+      }
+      if (obj.CacheControl != null) {
+        res.set("Cache-Control", obj.CacheControl);
+      }
+
+      res.send(obj.Body);
     }
-    res.send(obj.Body);
 
     return true;
   } catch (err) {
