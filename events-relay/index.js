@@ -1,6 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
-const fetch = require("fetch");
+const fetch = require("node-fetch");
 const fs = require("fs");
 const path = require("path");
 const assert = require("assert");
@@ -31,7 +31,7 @@ app.use(morgan("combined"));
 
 const logFileStream = fs.createWriteStream(
   path.join(config.logDir, "log.jsonlines"),
-  { mode: "a" }
+  { flags: "a" }
 );
 
 app.get("/health", (req, res) => {
@@ -92,3 +92,4 @@ app.post("/events", async (req, res) => {
 });
 
 app.listen(PORT, "0.0.0.0");
+console.log("Listening on port", PORT);
