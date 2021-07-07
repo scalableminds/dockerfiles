@@ -1,0 +1,19 @@
+{
+  "name": "events-relay",
+  "version": "1.0.0",
+  "description": "Relays events to amplitude",
+  "main": "index.js",
+  "author": "Norman Rzepka <norman.rzepka@scalableminds.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.1"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}

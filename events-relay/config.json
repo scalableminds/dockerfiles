@@ -1,0 +1,11 @@
+{
+  "amplitudeApiKey": "",
+  "amplitudeTarget": "https://api2.amplitude.com/2/httpapi",
+  "logDir": "./logs",
+  "wellKnownUris": [
+    {
+      "uri": "",
+      "apiKey": ""
+    }
+  ]
+}
