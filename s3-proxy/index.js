@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const path = require("path");
 const AWS = require("aws-sdk");
 
 const S3_BUCKET = process.env.S3_BUCKET;
@@ -9,13 +10,17 @@ const PORT = parseInt(process.env.PORT || "3000", 10);
 const s3Client = new AWS.S3();
 
 async function tryReadFile(filepath, res) {
+  const key = path.join(S3_BUCKET_PREFIX, filepath);
   try {
     const obj = await s3Client
       .getObject({
         Bucket: S3_BUCKET,
-        Key: `${S3_BUCKET_PREFIX}${filepath}`,
+        Key: key
       })
       .promise();
+    if (obj.ContentType === "application/x-directory") {
+      return false;
+    }
     if (obj.WebsiteRedirectLocation != null) {
       if (obj.WebsiteRedirectLocation.startsWith(`/${S3_BUCKET_PREFIX}`)) {
         res.redirect(
@@ -54,10 +59,10 @@ async function tryReadFile(filepath, res) {
 
     return true;
   } catch (err) {
-    console.error(err);
     if (err.code === "NoSuchKey") {
       return false;
     }
+    console.error(err);
     throw err;
   }
 }
@@ -74,7 +79,7 @@ app.get("*", async (req, res) => {
     if (await tryReadFile(justPath, res)) {
       return;
     }
-    if (await tryReadFile(`${justPath}/index.html`, res)) {
+    if (await tryReadFile(path.join(justPath, "index.html"), res)) {
       return;
     }
     res.status(404).end();
