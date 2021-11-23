@@ -15,7 +15,7 @@ async function tryReadFile(filepath, res) {
     const obj = await s3Client
       .getObject({
         Bucket: S3_BUCKET,
-        Key: key
+        Key: key,
       })
       .promise();
     if (obj.ContentType === "application/x-directory") {
@@ -75,6 +75,10 @@ app.get("/health", (req, res) => {
 });
 app.get("*", async (req, res) => {
   try {
+    if (!req.path.endsWith("/")) {
+      res.redirect(`${req.path}/`);
+      return;
+    }
     const justPath = decodeURI(req.path.replace(/^\//, "").replace(/\/$/, ""));
     if (await tryReadFile(justPath, res)) {
       return;
