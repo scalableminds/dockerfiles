@@ -99,7 +99,7 @@ COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-RUN python3 -m pip install pylint black==19.3b0
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
