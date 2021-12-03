@@ -99,7 +99,7 @@ COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+RUN pip3 install poetry
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
