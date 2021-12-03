@@ -50,7 +50,7 @@ add_all_dependencies() {
 }
 
 
-for APP in slurm-docker-cluster/Dockerfile; do
+for APP in */Dockerfile; do
   APP="${APP%/Dockerfile}"
   add_all_dependencies $APP
 done
