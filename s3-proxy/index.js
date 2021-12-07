@@ -76,9 +76,6 @@ async function sendFile(filepath, res) {
       res.send(obj.Body);
     }
   } catch (err) {
-    if (err.code === "NoSuchKey") {
-      return;
-    }
     console.error(err);
     throw err;
   }
@@ -93,22 +90,29 @@ app.get("/health", (req, res) => {
 app.get("*", async (req, res) => {
   try {
     const justPath = decodeURI(req.path.replace(/^\//, "").replace(/\/$/, ""));
+
+    // Check if path directly points to a file
     if (await fileExists(justPath)) {
       if (req.path.match(/\/index\.html$/) != null) {
+        // Redirect `.../index.html` to `.../`
         res.redirect(req.path.slice(0, -10));
         return;
       }
       await sendFile(justPath, res);
       return;
     }
+
+    // Check if path points to a folder that has an `index.html`
     if (await fileExists(path.join(justPath, "index.html"))) {
       if (!req.path.endsWith("/")) {
+        // Redirect `...` to `.../`, in order for links to work
         res.redirect(`${req.path}/`);
         return;
       }
       await sendFile(path.join(justPath, "index.html"), res);
       return;
     }
+
     res.status(404).end();
   } catch (err) {
     console.error(err);
