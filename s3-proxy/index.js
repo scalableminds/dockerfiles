@@ -89,10 +89,6 @@ app.get("/health", (req, res) => {
 });
 app.get("*", async (req, res) => {
   try {
-    if (!req.path.endsWith("/")) {
-      res.redirect(`${req.path}/`);
-      return;
-    }
     const justPath = decodeURI(req.path.replace(/^\//, "").replace(/\/$/, ""));
 
     // Check if path directly points to a file
