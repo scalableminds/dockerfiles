@@ -9,7 +9,29 @@ const PORT = parseInt(process.env.PORT || "3000", 10);
 
 const s3Client = new AWS.S3();
 
-async function tryReadFile(filepath, res) {
+async function fileExists(filepath) {
+  const key = path.join(S3_BUCKET_PREFIX, filepath);
+  try {
+    const obj = await s3Client
+      .headObject({
+        Bucket: S3_BUCKET,
+        Key: key,
+      })
+      .promise();
+    if (obj.ContentType === "application/x-directory") {
+      return false;
+    }
+    return true;
+  } catch (err) {
+    if (err.code === "NoSuchKey" || err.code === "NotFound") {
+      return false;
+    }
+    console.error(err);
+    throw err;
+  }
+}
+
+async function sendFile(filepath, res) {
   const key = path.join(S3_BUCKET_PREFIX, filepath);
   try {
     const obj = await s3Client
@@ -18,9 +40,6 @@ async function tryReadFile(filepath, res) {
         Key: key,
       })
       .promise();
-    if (obj.ContentType === "application/x-directory") {
-      return false;
-    }
     if (obj.WebsiteRedirectLocation != null) {
       if (obj.WebsiteRedirectLocation.startsWith(`/${S3_BUCKET_PREFIX}`)) {
         res.redirect(
@@ -56,11 +75,9 @@ async function tryReadFile(filepath, res) {
 
       res.send(obj.Body);
     }
-
-    return true;
   } catch (err) {
     if (err.code === "NoSuchKey") {
-      return false;
+      return;
     }
     console.error(err);
     throw err;
@@ -75,15 +92,21 @@ app.get("/health", (req, res) => {
 });
 app.get("*", async (req, res) => {
   try {
-    if (!req.path.endsWith("/")) {
-      res.redirect(`${req.path}/`);
-      return;
-    }
     const justPath = decodeURI(req.path.replace(/^\//, "").replace(/\/$/, ""));
-    if (await tryReadFile(justPath, res)) {
+    if (await fileExists(justPath)) {
+      if (req.path.match(/\/index\.html$/) != null) {
+        res.redirect(req.path.slice(0, -10));
+        return;
+      }
+      await sendFile(justPath, res);
       return;
     }
-    if (await tryReadFile(path.join(justPath, "index.html"), res)) {
+    if (await fileExists(path.join(justPath, "index.html"))) {
+      if (!req.path.endsWith("/")) {
+        res.redirect(`${req.path}/`);
+        return;
+      }
+      await sendFile(path.join(justPath, "index.html"), res);
       return;
     }
     res.status(404).end();
