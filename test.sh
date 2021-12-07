@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-for APP in $(./get_valid_order.sh); do
-  if [ -f $APP/test.sh ]; then
-    cd $APP
-    echo ""
-    echo "####### ${APP} #######"
-    echo ""
-    ./test.sh
-    echo
-    cd ..
-  fi
-done
+APP="$1"
+
+pushd $APP
+
+if [ -f test.sh ]; then
+  ./test.sh
+fi
+
+popd
