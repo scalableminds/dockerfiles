@@ -24,13 +24,23 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build docker images
+      working-directory: ${{ matrix.app }}
       run: |
         export CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
         export NORMALIZED_CI_BRANCH=${CI_BRANCH//[\/-]/_}
-        ./build.sh ${{ matrix.app }}
+
+        docker build \
+          -t scalableminds/${{ matrix.app }} \
+          -t scalableminds/${{ matrix.app }}:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID} \
+          -t scalableminds/${{ matrix.app }}:${NORMALIZED_CI_BRANCH} \
+          .
 
     - name: Run tests
-      run: ./test.sh ${{ matrix.app }}
+      working-directory: ${{ matrix.app }}
+      run: |
+        if [ -f test.sh ]; then
+          ./test.sh
+        fi
 
     - name: Push docker images
       env: 
