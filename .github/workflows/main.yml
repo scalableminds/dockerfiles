@@ -4,19 +4,43 @@ on: [push]
 
 jobs:
   build:
+    strategy:
+      matrix:
+        app:
+          - cronut
+          - duply
+          - events-relay
+          - helm
+          - kubectl
+          - nginx-proxy
+          - puppeteer
+          - s3-proxy
+          - sbt
+          - slurm-docker-cluster
+          - wklink
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Build docker images
+      working-directory: ${{ matrix.app }}
       run: |
         export CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
         export NORMALIZED_CI_BRANCH=${CI_BRANCH//[\/-]/_}
-        ./build.sh
+
+        docker build \
+          -t scalableminds/${{ matrix.app }} \
+          -t scalableminds/${{ matrix.app }}:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID} \
+          -t scalableminds/${{ matrix.app }}:${NORMALIZED_CI_BRANCH} \
+          .
 
     - name: Run tests
-      run: ./test.sh
+      working-directory: ${{ matrix.app }}
+      run: |
+        if [ -f test.sh ]; then
+          ./test.sh
+        fi
 
     - name: Push docker images
       env: 
@@ -30,22 +54,19 @@ jobs:
         }
 
         echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-        for APP in $(./get_valid_order.sh); do
-          echo ""
-          echo "####### ${APP} #######"
-          echo ""
-          if does_repo_exist $APP; then
-            docker push scalableminds/$APP:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID}
-            docker push scalableminds/$APP:${NORMALIZED_CI_BRANCH}
-          else
-            docker tag \
-              scalableminds/$APP:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID} \
-              scalableminds/various:${APP}__${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID}
-            docker push scalableminds/various:${APP}__${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID}
-            docker tag \
-              scalableminds/$APP:${NORMALIZED_CI_BRANCH} \
-              scalableminds/various:${APP}__${NORMALIZED_CI_BRANCH}
-            docker push scalableminds/various:${APP}__${NORMALIZED_CI_BRANCH}
-          fi
-        done
+
+        if does_repo_exist ${{ matrix.app }}; then
+          docker push scalableminds/${{ matrix.app }}:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID}
+          docker push scalableminds/${{ matrix.app }}:${NORMALIZED_CI_BRANCH}
+        else
+          docker tag \
+            scalableminds/${{ matrix.app }}:${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID} \
+            scalableminds/various:${{ matrix.app }}__${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID}
+          docker push scalableminds/various:${{ matrix.app }}__${NORMALIZED_CI_BRANCH}__${GITHUB_RUN_ID}
+          docker tag \
+            scalableminds/${{ matrix.app }}:${NORMALIZED_CI_BRANCH} \
+            scalableminds/various:${{ matrix.app }}__${NORMALIZED_CI_BRANCH}
+          docker push scalableminds/various:${{ matrix.app }}__${NORMALIZED_CI_BRANCH}
+        fi
+
         docker logout
