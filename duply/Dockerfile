@@ -11,6 +11,7 @@ RUN  apt-get update \
       openssh-client \
       pwgen \
       python-boto \
+      python-pip \
       rsync \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
