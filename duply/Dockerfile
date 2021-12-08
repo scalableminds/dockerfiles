@@ -13,7 +13,8 @@ RUN  apt-get update \
       python-boto \
       rsync \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && pip install b2
 
 RUN mkdir -p /root/.duply/project
 COPY conf.template /root/.duply/project/conf.template
