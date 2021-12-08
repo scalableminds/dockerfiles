@@ -11,9 +11,11 @@ RUN  apt-get update \
       openssh-client \
       pwgen \
       python-boto \
+      python-pip \
       rsync \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+  && pip install b2==3.1.0
 
 RUN mkdir -p /root/.duply/project
 COPY conf.template /root/.duply/project/conf.template
