@@ -15,7 +15,7 @@ RUN  apt-get update \
       rsync \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-  && pip3 install b2==3.1.0 b2sdk==0.1.8
+  && pip3 install b2sdk==0.1.8 # duplicity needs old b2sdk version
 
 RUN mkdir -p /root/.duply/project
 COPY conf.template /root/.duply/project/conf.template
