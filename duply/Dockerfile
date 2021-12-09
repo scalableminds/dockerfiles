@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:bullseye
 
 RUN  apt-get update \
   && apt-get install -y \
@@ -15,7 +15,7 @@ RUN  apt-get update \
       rsync \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-  && pip install b2==3.1.0
+  && pip install b2==3.1.0 b2sdk==1.13.0
 
 RUN mkdir -p /root/.duply/project
 COPY conf.template /root/.duply/project/conf.template
