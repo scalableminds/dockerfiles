@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:bullseye
 
 RUN  apt-get update \
   && apt-get install -y \
@@ -10,12 +10,10 @@ RUN  apt-get update \
       mailutils \
       openssh-client \
       pwgen \
-      python-boto \
-      python-pip \
+      python3-boto \
       rsync \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-  && pip install b2==3.1.0
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir -p /root/.duply/project
 COPY conf.template /root/.duply/project/conf.template
