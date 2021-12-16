@@ -1,6 +1,6 @@
 # Slurm Docker Cluster
 
-This is a multi-container Slurm cluster using docker-compose.  The compose file
+This is a multi-container Slurm cluster using docker-compose.  The [compose file](https://github.com/scalableminds/webknossos-libs/blob/master/cluster_tools/dockered-slurm/docker-compose.yml)
 creates named volumes for persistent storage of MySQL data files as well as
 Slurm state and log directories.
 
