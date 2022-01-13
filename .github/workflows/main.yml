@@ -12,6 +12,7 @@ jobs:
           - events-relay
           - helm
           - kubectl
+          - netdebug
           - nginx-proxy
           - puppeteer
           - s3-proxy
