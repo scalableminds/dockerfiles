@@ -12,6 +12,7 @@ Docker images used within scalableminds :whale:
 | [duply](duply)             | ![](https://img.shields.io/docker/image-size/scalableminds/duply/master) ![](https://img.shields.io/docker/pulls/scalableminds/duply) | [scalableminds/duply] |
 | [helm](helm)               | ![](https://img.shields.io/docker/image-size/scalableminds/helm/master) ![](https://img.shields.io/docker/pulls/scalableminds/helm) | [scalableminds/helm] |
 | [kubectl](kubectl)         | ![](https://img.shields.io/docker/image-size/scalableminds/kubectl/master) ![](https://img.shields.io/docker/pulls/scalableminds/kubectl) | [scalableminds/kubectl] |
+| [netdebug](netdebug)         | ![](https://img.shields.io/docker/image-size/scalableminds/netdebug/master) ![](https://img.shields.io/docker/pulls/scalableminds/netdebug) | [scalableminds/netdebug] |
 | [nginx-proxy](nginx-proxy) | ![](https://img.shields.io/docker/image-size/scalableminds/nginx-proxy/master) ![](https://img.shields.io/docker/pulls/scalableminds/nginx-proxy) | [scalableminds/nginx-proxy] |
 | [puppeteer](puppeteer)     | ![](https://img.shields.io/docker/image-size/scalableminds/puppeteer/master) ![](https://img.shields.io/docker/pulls/scalableminds/puppeteer) | [scalableminds/puppeteer] |
 | [sbt](sbt)                 | ![](https://img.shields.io/docker/image-size/scalableminds/sbt/master) ![](https://img.shields.io/docker/pulls/scalableminds/sbt) | [scalableminds/sbt] |
