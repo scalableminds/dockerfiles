@@ -1,4 +1,4 @@
-FROM centos:7
+FROM rockylinux:8.5
 
 ENV LC_ALL=en_US.utf8
 ENV LANG=en_US.utf8
@@ -13,9 +13,8 @@ ARG SLURM_TAG=slurm-19-05-1-2
 ARG GOSU_VERSION=1.11
 
 RUN set -ex \
-    && yum makecache fast \
+    && yum makecache \
     && yum -y update \
-    && yum -y install epel-release \
     && yum -y install \
        wget \
        bzip2 \
@@ -26,19 +25,17 @@ RUN set -ex \
        gnupg \
        make \
        munge \
-       munge-devel \
-       python-devel \
-       python-pip \
-       python3 \
-       python3-devel \
-       python3-pip \
+       python38 \
+       python38-devel \
+       python38-pip \
        mariadb-server \
        mariadb-devel \
        psmisc \
        bash-completion \
        vim-enhanced \
     && yum clean all \
-    && rm -rf /var/cache/yum
+    && rm -rf /var/cache/yum \
+    && ln -s /usr/bin/python3 /usr/bin/python
 
 RUN python3 -m pip install --upgrade pip
 
@@ -73,8 +70,8 @@ RUN set -x \
     && install -D -m644 contribs/slurm_completion_help/slurm_completion.sh /etc/profile.d/slurm_completion.sh \
     && popd \
     && rm -rf slurm \
-    && groupadd -r --gid=995 slurm \
-    && useradd -r -g slurm --uid=995 slurm \
+    && groupadd -r --gid=994 slurm \
+    && useradd -r -g slurm --uid=994 slurm \
     && mkdir /etc/sysconfig/slurm \
         /var/spool/slurmd \
         /var/run/slurmd \
