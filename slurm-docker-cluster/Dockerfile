@@ -15,6 +15,7 @@ ARG GOSU_VERSION=1.11
 RUN set -ex \
     && yum makecache \
     && yum -y update \
+    && yum -y install epel-release \
     && yum -y install \
        wget \
        bzip2 \
@@ -25,6 +26,7 @@ RUN set -ex \
        gnupg \
        make \
        munge \
+       munge-devel \
        python38 \
        python38-devel \
        python38-pip \
