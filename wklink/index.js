@@ -1,4 +1,4 @@
-const { send, createError } = require("micro");
+const { createError } = require("micro");
 const fs = require("fs");
 const { promisify } = require("util");
 
@@ -8,7 +8,8 @@ const fsReadFile = promisify(fs.readFile);
 const TAG_REGEX = /^\/([0-9]+)\/?$/;
 
 function parseTag(url) {
-  const m = url.match(TAG_REGEX);
+  const u = new URL(`http://example.com${url}`);
+  const m = u.pathname.match(TAG_REGEX);
   if (m != null) {
     return m[1];
   }
