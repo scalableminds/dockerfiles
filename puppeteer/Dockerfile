@@ -13,6 +13,8 @@ FROM node:16-slim
 #     && rm -rf /var/lib/apt/lists/* \
 #     && rm -rf /src/*.deb
 
+WORKDIR /usr/app
+
 # Inspired by https://gist.github.com/navarroaxel/3f44927c9a3e28c25a2b30c244813e07
 RUN apt-get update && apt-get install curl gnupg -y \
   && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
