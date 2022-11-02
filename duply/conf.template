@@ -67,7 +67,7 @@ DUPL_PARAMS="$DUPL_PARAMS --full-if-older-than $MAX_FULLBKP_AGE "
 
 # set the size of backup chunks to VOLSIZE MB instead of the default 25MB.
 # VOLSIZE must be number of MB's to set the volume size to.
-VOLSIZE=1000
+VOLSIZE=10240
 DUPL_PARAMS="$DUPL_PARAMS --volsize $VOLSIZE "
 
 # allowing source hostname mismatch, which is easily happening in Docker environments:
