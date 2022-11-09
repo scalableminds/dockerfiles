@@ -74,8 +74,8 @@ RUN set -x \
     && install -D -m644 contribs/slurm_completion_help/slurm_completion.sh /etc/profile.d/slurm_completion.sh \
     && popd \
     && rm -rf slurm \
-    && groupadd -r --gid=994 slurm \
-    && useradd -r -g slurm --uid=994 slurm \
+    && groupadd -r --gid=1001 slurm \
+    && useradd -r -g slurm --uid=1001 slurm \
     && mkdir /etc/sysconfig/slurm \
         /var/spool/slurmd \
         /var/run/slurmd \
