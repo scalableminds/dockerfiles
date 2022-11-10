@@ -1,4 +1,4 @@
-FROM eclipse-temurin:8
+FROM eclipse-temurin:14
 
 ARG VERSION_SBT="1.2.3"
 ARG VERSION_SBT_MINOR="1.2"
