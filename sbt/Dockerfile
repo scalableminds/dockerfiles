@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk
+FROM eclipse-temurin:11
 
 ARG VERSION_SBT="1.2.3"
 ARG VERSION_SBT_MINOR="1.2"
