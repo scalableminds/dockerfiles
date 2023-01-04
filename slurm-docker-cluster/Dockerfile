@@ -9,7 +9,7 @@ LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docke
       org.label-schema.docker.cmd="docker-compose up -d" \
       maintainer="Giovanni Torres"
 
-ARG SLURM_TAG=slurm-19-05-1-2
+ARG SLURM_TAG=slurm-21-08-8-2
 ARG GOSU_VERSION=1.11
 
 RUN set -ex \
@@ -95,8 +95,11 @@ RUN set -x \
     && chown -R slurm:slurm /var/*/slurm* \
     && /sbin/create-munge-key
 
-COPY slurm.conf /etc/slurm/slurm.conf
-COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
+COPY --chown=slurm:slurm slurm.conf /etc/slurm/slurm.conf
+COPY --chown=slurm:slurm slurmdbd.conf /etc/slurm/slurmdbd.conf
+
+RUN chmod 600 /etc/slurm/slurm.conf
+RUN chmod 600 /etc/slurm/slurmdbd.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
