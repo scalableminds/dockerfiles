@@ -35,6 +35,7 @@ RUN set -ex \
        mariadb-server \
        mariadb-devel \
        psmisc \
+       slurm-contribs \
        bash-completion \
        vim-enhanced \
     && dnf clean all \
