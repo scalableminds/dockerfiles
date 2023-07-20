@@ -1,4 +1,4 @@
-FROM rockylinux:8.5
+FROM rockylinux:9.2
 
 ENV LC_ALL=en_US.utf8
 ENV LANG=en_US.utf8
@@ -9,15 +9,15 @@ LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docke
       org.label-schema.docker.cmd="docker-compose up -d" \
       maintainer="Giovanni Torres"
 
-ARG SLURM_TAG=slurm-21-08-8-2
+ARG SLURM_TAG=slurm-22-05-9-1
 ARG GOSU_VERSION=1.11
 
 RUN set -ex \
     && dnf makecache \
     && dnf -y update \
-    && dnf -y install dnf-plugins-core https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
+    && dnf -y install dnf-plugins-core https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
     && dnf config-manager --enable epel \
-    && dnf config-manager --set-enabled powertools \
+    && dnf config-manager --enable crb \
     && dnf -y install \
        wget \
        bzip2 \
@@ -25,13 +25,14 @@ RUN set -ex \
        gcc \
        gcc-c++\
        git \
+       glibc-langpack-en \
        gnupg \
        make \
        munge \
        munge-devel \
-       python38 \
-       python38-devel \
-       python38-pip \
+       python39 \
+       python3-devel \
+       python3-pip \
        mariadb-server \
        mariadb-devel \
        psmisc \
@@ -63,9 +64,8 @@ RUN set -ex \
     && gosu nobody true
 
 RUN set -x \
-    && git clone https://github.com/SchedMD/slurm.git \
+    && git clone --depth 1 --branch $SLURM_TAG https://github.com/SchedMD/slurm.git \
     && pushd slurm \
-    && git checkout tags/$SLURM_TAG \
     && ./configure --enable-debug --prefix=/usr --sysconfdir=/etc/slurm \
         --with-mysql_config=/usr/bin  --libdir=/usr/lib64 \
     && make install \
