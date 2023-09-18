@@ -1,0 +1,5 @@
+pdfquery
+pyopenmensa
+python-dateutil
+requests
+flask

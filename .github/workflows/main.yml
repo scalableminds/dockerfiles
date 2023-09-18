@@ -19,6 +19,7 @@ jobs:
           - sbt
           - slurm-docker-cluster
           - wklink
+          - om-bistro
     runs-on: ubuntu-latest
 
     steps:
