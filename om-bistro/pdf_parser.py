@@ -89,8 +89,9 @@ def parse_pdf():
     current_day = find_monday_date(pdf)
 
     for day in days:
-        for food in get_meals_for_day(pdf, day):
-            canteen.addMeal(current_day, "standard", food)
+        for i, food in enumerate(get_meals_for_day(pdf, day)):
+            category = "Fleischlos" if i == 0 else "Fleischlich" # Until now, vegetarian food is always first
+            canteen.addMeal(current_day, category, food)
         current_day = current_day + datetime.timedelta(days=1)
 
     return canteen.toXMLFeed()
