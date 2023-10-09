@@ -9,6 +9,10 @@ RUN curl -Ls "https://github.com/sbt/sbt/releases/download/v${VERSION_SBT}/sbt-$
     tar zx -C /usr/local/ && \
     ln -s /usr/local/sbt-${VERSION_SBT} /usr/local/sbt
 
+RUN apt-get update && apt-get install apt-transport-https && \
+    apt-get update && apt-get install -y build-essential git \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 ENV PATH /usr/local/sbt/bin:${PATH}
 
 RUN mkdir /app && chmod 777 /app
