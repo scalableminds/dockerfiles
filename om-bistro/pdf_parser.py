@@ -8,15 +8,20 @@ from pyopenmensa.feed import LazyBuilder
 days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 
 
-
 def get_text_until_next_day(pdf, day_label):
-    query = f"LTTextLineHorizontal:contains('{day_label}')"
-    day_element = pdf.pq(query)[0]
+    try:
+        query = f"LTTextLineHorizontal:contains('{day_label}')"
+        day_element = pdf.pq(query)[0]
+    except IndexError:
+        # Try without the first letter, it is sometimes cut off
+        query = f"LTTextLineHorizontal:contains('{day_label[1:]}')"
+        day_element = pdf.pq(query)[0]
 
     def is_date_demarker(element):
         text = element.getchildren()[0].text
         for day in [
             *days,
+            *[day[1:] for day in days],  # Sometimes the first letter is cut off
             "wechselnden Speisen",
         ]:  # "wechselnden Speisen" is a hacky delimiter for the last day
             if day in text:
@@ -89,9 +94,14 @@ def parse_pdf():
     current_day = find_monday_date(pdf)
 
     for day in days:
-        for i, food in enumerate(get_meals_for_day(pdf, day)):
-            category = "Fleischlos" if i == 0 else "Fleischlich" # Until now, vegetarian food is always first
-            canteen.addMeal(current_day, category, food)
+        try:
+            for i, food in enumerate(get_meals_for_day(pdf, day)):
+                category = (
+                    "Fleischlos" if i == 0 else "Fleischlich"
+                )  # Until now, vegetarian food is always first
+                canteen.addMeal(current_day, category, food)
+        except Exception:
+            print(f"Could not parse day {day}")
         current_day = current_day + datetime.timedelta(days=1)
 
     return canteen.toXMLFeed()
