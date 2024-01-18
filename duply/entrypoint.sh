@@ -16,7 +16,7 @@ envsubst '${GPG_PW} ${SCHEME} ${HOST} ${HOSTPATH} ${USER} ${PASSWORD}' < conf.te
 
 LOGFILE="$(date +%F)-backup-log"
 if [ -z "$1" ] || [ "$1" = 'backup' ]; then
-    duply project backup_verify_purge --force 2>&1 | tee ${LOGFILE}
+    duply project backup_verify_purgeAuto --force 2>&1 | tee ${LOGFILE}
     EXIT_CODE=$?
 elif [ "$1" = 'restore' ]; then
     duply project $@ -v9 2>&1 | tee ${LOGFILE}

@@ -60,6 +60,11 @@ TEMP_DIR=/tmp
 # see duplicity man page, chapter TIME_FORMATS)
 MAX_AGE=5M
 
+# Number of full backups for which incrementals will be kept for.
+# Used for the "purgeIncr" command.
+# See duplicity man page, action "remove-all-inc-of-but-n-full".
+MAX_FULLS_WITH_INCRS=5
+
 # forces a full backup if last full backup reaches a specified age, for the 
 # format of MAX_FULLBKP_AGE see duplicity man page, chapter TIME_FORMATS
 MAX_FULLBKP_AGE=1W
@@ -73,5 +78,7 @@ DUPL_PARAMS="$DUPL_PARAMS --volsize $VOLSIZE "
 # allowing source hostname mismatch, which is easily happening in Docker environments:
 DUPL_PARAMS="$DUPL_PARAMS --allow-source-mismatch "
 
-# verbosity level DEBUG
-DUPL_PARAMS="$DUPL_PARAMS -v9 "
+# verbosity of output (error 0, warning 1-2, notice 3-4, info 5-8, debug 9)
+# default is 4, if not set
+VERBOSITY=5
+
