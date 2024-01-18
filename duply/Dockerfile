@@ -10,7 +10,7 @@ RUN  apt-get update \
   mailutils \
   openssh-client \
   pwgen \
-  python3-boto \
+  python3-boto3 \
   rsync \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

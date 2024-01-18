@@ -16,7 +16,7 @@ docker run \
   -v "$TEST_HOSTPATH" \
   -v "/restore_here" \
   --rm \
-  debian:buster sleep infinity
+  debian:trixie sleep infinity
 
 # deletes the tester container on exit
 function cleanup {      
