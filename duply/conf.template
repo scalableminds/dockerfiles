@@ -72,3 +72,6 @@ DUPL_PARAMS="$DUPL_PARAMS --volsize $VOLSIZE "
 
 # allowing source hostname mismatch, which is easily happening in Docker environments:
 DUPL_PARAMS="$DUPL_PARAMS --allow-source-mismatch "
+
+# verbosity level DEBUG
+DUPL_PARAMS="$DUPL_PARAMS -v9 "
