@@ -1,7 +1,7 @@
-FROM eclipse-temurin:11
+FROM eclipse-temurin:21
 
-ARG VERSION_SBT="1.2.3"
-ARG VERSION_SBT_MINOR="1.2"
+ARG VERSION_SBT="1.9.8"
+ARG VERSION_SBT_MINOR="1.9"
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -22,4 +22,4 @@ WORKDIR /app/
 ENV HOME /root
 ENV SBT_OPTS "-Dsbt.global.base=/root/.sbt/${VERSION_SBT_MINOR}  -Dsbt.ivy.home=/tmp/.ivy2/  -Divy.home=/tmp/.ivy2/"
 RUN sbt sbtVersion # adding sbt to the cache
-RUN chmod -R 777 /root /tmp/.ivy2
+RUN chmod -R 777 /root /tmp/.sbt
