@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21
 
 ARG VERSION_SBT="1.9.8"
-ARG VERSION_SBT_MINOR="1.2"
+ARG VERSION_SBT_MINOR="1.9"
 
 ENV DEBIAN_FRONTEND noninteractive
 
