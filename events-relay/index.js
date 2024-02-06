@@ -10,10 +10,6 @@ const PORT = parseInt(process.env.PORT || "3000", 10);
 
 const config = require("./config.json");
 assert(
-  config.amplitudeApiKey !== "" && config.amplitudeApiKey != null,
-  "Please set a `amplitudeApiKey` in the config."
-);
-assert(
   config.amplitudeTarget !== "" && config.amplitudeTarget != null,
   "Please set a `amplitudeTarget` in the config."
 );
