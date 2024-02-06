@@ -124,7 +124,7 @@ app.post("/events", async (req, res) => {
         accept: "*/*",
       },
       body: JSON.stringify({
-        api_key: config.amplitudeApiKey,
+        api_key: reqPayload.api_key,
         events: reqPayload.events,
       }),
     });
