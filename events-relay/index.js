@@ -84,10 +84,16 @@ app.get("/health", (req, res) => {
 app.post("/events", async (req, res) => {
   try {
     const reqPayload = req.body;
-    const webknossosUri = reqPayload.events[0].user_properties.webknossos_uri;
+    const webknossosUri =
+      reqPayload.events[0].user_properties != null
+        ? reqPayload.events[0].user_properties.webknossos_uri
+        : reqPayload.events[0].userProperties.webknossosUri;
     if (
       reqPayload.events.some(
-        (ev) => ev.user_properties.webknossos_uri !== webknossosUri
+        (ev) =>
+          (ev.user_properties != null
+            ? ev.user_properties.webknossos_uri
+            : ev.userProperties.webknossosUri) !== webknossosUri
       )
     ) {
       res
