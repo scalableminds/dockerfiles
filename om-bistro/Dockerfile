@@ -3,6 +3,8 @@ FROM python:3.8-slim-buster
 
 WORKDIR /python-docker
 
+RUN apt-get update && apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-deu
+
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
