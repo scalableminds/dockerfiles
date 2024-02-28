@@ -2,106 +2,96 @@ import datetime
 import re
 
 from dateutil.parser import parse
-from pdfquery import PDFQuery
 from pyopenmensa.feed import LazyBuilder
-
-days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
-
-
-def get_text_until_next_day(pdf, day_label):
-    try:
-        query = f"LTTextLineHorizontal:contains('{day_label}')"
-        day_element = pdf.pq(query)[0]
-    except IndexError:
-        # Try without the first letter, it is sometimes cut off
-        query = f"LTTextLineHorizontal:contains('{day_label[1:]}')"
-        day_element = pdf.pq(query)[0]
-
-    def is_date_demarker(element):
-        text = element.getchildren()[0].text
-        for day in [
-            *days,
-            *[day[1:] for day in days],  # Sometimes the first letter is cut off
-            "wechselnden Speisen",
-        ]:  # "wechselnden Speisen" is a hacky delimiter for the last day
-            if day in text:
-                return True
-        return False
-
-    current_element = day_element.getnext()
-    strings = []
-    while not is_date_demarker(current_element):
-        for child in current_element.getchildren():
-            strings.append(child.text)
-        current_element = current_element.getnext()
-    return strings
+from pdf2image import convert_from_path
+from PIL import Image
+import pyocr
 
 
-def filter_texts(texts):
-    price_regex = r"^\d,\d\d?$"
-    for text in texts:
-        text = text.strip()
-        if text == "":
-            continue
-        if re.fullmatch(price_regex, text):
-            continue
-        yield text
+def read_image():
+    lang = "deu"
+    tool = pyocr.get_available_tools()[0]
+
+    txt = tool.image_to_string(
+        Image.open("out.png"), lang=lang, builder=pyocr.builders.TextBuilder()
+    )
+    return txt
 
 
-def parse_texts_into_meals(texts):
-    match = ""
-    for text in filter_texts(texts):
-        if text.startswith("- "):
-            if match != "":
-                yield match
-                match = ""
-            match += text[2:]
-            continue
-        elif match != "":
-            match += " " + text
-    if match != "":
-        yield match
+def parse_ocr_text(txt):
 
+    # Discard everything before "Montag"
+    txt = txt[txt.index("Montag") :]
+    # Discard everything after the last day (before "Portionen fleischlos")
+    txt = txt[: txt.rindex("Portionen fleischlos")]
 
-def get_meals_for_day(pdf, day_label):
-    texts = get_text_until_next_day(pdf, day_label)
-    return list(parse_texts_into_meals(texts))
+    # Split on lines containing a day
+    day_offers = re.split(r"\n(?=\w+Montag|Dienstag|Mittwoch|Donnerstag|Freitag)", txt)
+    # First line will be the day, the rest will be the offers
+    day_offers = [re.split(r"\n", day_offer) for day_offer in day_offers]
+    # discard empty lines
+    day_offers = [[line for line in day_offer if line] for day_offer in day_offers]
+    # discard the day
+    day_offers = [day_offer[1:] for day_offer in day_offers]
+    # "-" marks the beginning of an offer: add lines without "-" to the previous offer
+    # fix this by going through the lines in reverse order
+    for i, day_offer in enumerate(day_offers):
+        for j in range(len(day_offer) - 1, 0, -1):
+            if not day_offer[j].startswith("-"):
+                day_offer[j - 1] += " " + day_offer.pop(j)
+    
+    # Remove leading "-" from offers
+    for day_offer in day_offers:
+        for i, offer in enumerate(day_offer):
+            if offer.startswith("-"):
+                day_offer[i] = offer[1:].strip()
+   
+    # At the end of the line, there is the price in the format "X,X": convert each offer to a tuple (offer, price as float)
 
+    day_offers = [
+        [
+            (offer[: offer.rindex(" ")], float(offer[offer.rindex(" ") + 1:].replace(",", ".")))
+            for offer in day_offer
+        ]
+        for day_offer in day_offers
+    ]
 
-def find_monday_date(pdf) -> datetime.date:
-    try:
-        date_string = (
-            pdf.pq("LTTextLineHorizontal:contains('Mittagstisch vom')")[0]
-            .getchildren()[0]
-            .text
-        )
-        daterx = r"\d\d\.\d\d"
-        first_date = re.findall(daterx, date_string)[0]
-        return parse(first_date).date()
-    except Exception:
-        print("Could not parse date")
+    return day_offers
 
+def find_monday_date(txt):
+    # The line "Mittagstisch vom 26.02. - 01.03.2024" contains the date of the monday
+    match = re.search(r"Mittagstisch vom ([\d.]+)", txt)
+    date_string = match.group(1)
+    # Add year to datestring
+    date_string += str(datetime.datetime.now().year)
+    date = parse(date_string, dayfirst=True)
+    # If the date is not a monday, find the next monday
+    while date.weekday() != 0:
+        date += datetime.timedelta(days=1)
+
+    # datetime to date
+    return date.date()
 
 def parse_pdf():
     pdf_path = "downloaded.pdf"
-    pdf = PDFQuery(pdf_path)
-    pdf.load()
+    images = convert_from_path(pdf_path)
+    image = images[0]
+    image.save("out.png")
+    txt = read_image()
+    parsed = parse_ocr_text(txt)
 
     canteen = LazyBuilder()
     canteen.name = "Schraders Bistro"
     canteen.city = "Potsdam"
 
-    current_day = find_monday_date(pdf)
+    current_day = find_monday_date(txt)
 
-    for day in days:
-        try:
-            for i, food in enumerate(get_meals_for_day(pdf, day)):
-                category = (
-                    "Fleischlos" if i == 0 else "Fleischlich"
-                )  # Until now, vegetarian food is always first
-                canteen.addMeal(current_day, category, food)
-        except Exception:
-            print(f"Could not parse day {day}")
+    for day in parsed:
+        for i, offer in enumerate(day):
+            category = "Fleischlos" if i == 0 else "Fleischlich" # Until now, vegetarian food is always first
+            food = offer[0]
+            price = offer[1]
+            canteen.addMeal(current_day, category, food, prices = {"other" : price})
         current_day = current_day + datetime.timedelta(days=1)
 
     return canteen.toXMLFeed()

@@ -1,5 +1,7 @@
-pdfquery
 pyopenmensa
 python-dateutil
 requests
 flask
+pdf2image
+pyocr
+pytesseract
