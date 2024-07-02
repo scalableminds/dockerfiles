@@ -12,8 +12,8 @@ RUN  apt-get update \
   pwgen \
   python3-pip \
   python3-boto \
+  python3-b2sdk \
   rsync \
-  && pip install --break-system-packages b2sdk \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
