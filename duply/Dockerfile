@@ -10,10 +10,9 @@ RUN  apt-get update \
   mailutils \
   openssh-client \
   pwgen \
-  python3-pip \
-  python3-boto \
+  python3-boto3 \
+  python3-b2sdk \
   rsync \
-  && pip install --break-system-packages b2sdk \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
