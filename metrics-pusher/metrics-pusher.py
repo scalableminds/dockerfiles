@@ -5,6 +5,7 @@ import time
 import multiprocessing
 import os
 import traceback
+import urllib.parse
 
 endpoints = {
     "node_exporter": "http://localhost:9100/metrics",
@@ -65,6 +66,7 @@ if __name__ == "__main__":
     scrape_interval = int(os.getenv("SCRAPE_INTERVAL", "60"))
     auth_user = os.environ.get("AUTH_USER")
     auth_pass = os.environ.get("AUTH_PASS")
+    urls = os.environ.get("ENDPOINTS")
 
     if name is None or name == "":
         print("No INSTANCE_NAME provided")
@@ -72,6 +74,13 @@ if __name__ == "__main__":
     if pushgateway_url is None:
         print("No PUSHGATEWAY_URL provided")
         exit(1)
+    if urls is None:
+        print("No ENDPOINTS configured. Use a comma seperated list of URLs.")
+
+    endpoints = {}
+    for url in urls.split(","):
+        u = urllib.parse.urlparse(url)
+        endpoints[u.hostname] = url
 
     print(f"{name=}")
     print(f"{pushgateway_url=}")
