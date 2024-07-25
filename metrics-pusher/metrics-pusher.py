@@ -7,10 +7,6 @@ import os
 import traceback
 import urllib.parse
 
-endpoints = {
-    "node_exporter": "http://localhost:9100/metrics",
-}
-
 
 def metrics_appendix() -> str:
     return f"# HELP metrics_pusher_last_push Last timestamp send\n# TYPE metrics_pusher_last_push counter\nmetrics_pusher_last_push {int(time.time())}"
