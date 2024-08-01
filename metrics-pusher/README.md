@@ -11,7 +11,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
     -e SCRAPE_INTERVAL=60 \
     -e AUTH_USER="<user>" \
     -e AUTH_PASSWORD="<password>" \
-    -e ENDPOINTS="http://<domain1>,http://<domain2>" \
+    -e ENDPOINTS="http://<domain1>/metrics,http://<domain2>/metrics" \
     scalableminds/metrics-pusher
 ```
 
@@ -28,5 +28,5 @@ Environment Variables:
 | `SCRAPE_INTERVAL` | Scrape interval in seconds. Default to 60. |
 | `AUTH_USER` | User for Basic Auth |
 | `AUTH_PASSWORD` | Password for Basic Auth |
-| `ENDPOINTS` | Comma separated list of URLs. Each endpoint will be scraped once per interval. Allows at most one URL per hostname. |
+| `ENDPOINTS` | Comma separated list of URLs. Each endpoint will be scraped once per interval. Allows at most one URL per hostname (e.g. `http://node_exporter:9100/metrics`) |
 
