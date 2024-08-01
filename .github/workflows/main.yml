@@ -20,6 +20,7 @@ jobs:
           - slurm-docker-cluster
           - wklink
           - om-bistro
+          - metrics-pusher
     runs-on: ubuntu-latest
 
     steps:
