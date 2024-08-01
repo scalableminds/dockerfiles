@@ -15,7 +15,7 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock \
     scalableminds/metrics-pusher
 ```
 
-This will scrape all containers with label `gather.logs=true`.
+This will scrape all specified endpoints.
 
 ## Configuration
 
@@ -28,5 +28,5 @@ Environment Variables:
 | `SCRAPE_INTERVAL` | Scrape interval in seconds. Default to 60. |
 | `AUTH_USER` | User for Basic Auth |
 | `AUTH_PASSWORD` | Password for Basic Auth |
-| `ENDPOINTS` | Comma separated list of URLs. Allows at most one URL per hostname. |
+| `ENDPOINTS` | Comma separated list of URLs. Each endpoint will be scraped once per interval. Allows at most one URL per hostname. |
 
