@@ -61,7 +61,7 @@ if __name__ == "__main__":
     pushgateway_url = os.environ.get("PUSHGATEWAY_URL")
     scrape_interval = int(os.getenv("SCRAPE_INTERVAL", "60"))
     auth_user = os.environ.get("AUTH_USER")
-    auth_pass = os.environ.get("AUTH_PASS")
+    auth_pass = os.environ.get("AUTH_PASSWORD")
     urls = os.environ.get("ENDPOINTS")
 
     if name is None or name == "":

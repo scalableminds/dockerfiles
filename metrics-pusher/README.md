@@ -1,0 +1,32 @@
+# Metric Pusher
+
+## Usage
+
+Run using docker:
+
+```sh
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
+    -e INSTANCE_NAME="foo" \
+    -e PUSHGATEWAY_URL="https://<domain>/path/to/pushgateway" \
+    -e SCRAPE_INTERVAL=60 \
+    -e AUTH_USER="<user>" \
+    -e AUTH_PASSWORD="<password>" \
+    -e ENDPOINTS="http://<domain1>,http://<domain2>" \
+    scalableminds/metrics-pusher
+```
+
+This will scrape all containers with label `gather.logs=true`.
+
+## Configuration
+
+Environment Variables:
+
+| Name | Description |
+|------|-------------|
+| `INSTANCE_NAME` | Job name used for pushing metrics |
+| `PUSHGATEWAY_URL` | URL to push metrics to (e.g. `https://<domain>/path/to/pushgateway`) |
+| `SCRAPE_INTERVAL` | Scrape interval in seconds. Default to 60. |
+| `AUTH_USER` | User for Basic Auth |
+| `AUTH_PASSWORD` | Password for Basic Auth |
+| `ENDPOINTS` | Comma separated list of URLs. Allows at most one URL per hostname. |
+
