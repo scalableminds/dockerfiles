@@ -4,7 +4,7 @@ clients:
 - url: ${LOKI_PUSH_URL}
   basic_auth:
     username: ${LOKI_PUSH_USER}
-    password: ${LOKI_PUSH_PASSW}
+    password: ${LOKI_PUSH_PASSWORD}
 scrape_configs:
 - job_name: docker
   docker_sd_configs:
