@@ -5,6 +5,8 @@ clients:
   basic_auth:
     username: ${LOKI_PUSH_USER}
     password: ${LOKI_PUSH_PASSWORD}
+  external_labels:
+    instance: ${INSTANCE_NAME}
 scrape_configs:
 - job_name: docker
   docker_sd_configs:
@@ -16,7 +18,3 @@ scrape_configs:
   - source_labels: ['__meta_docker_container_label_gather_logs']
     regex: 'true'
     action: 'keep'
-  - source_labels: ['__meta_docker_container_label_gather_logs']
-    regex: '.*'
-    target_label: 'instance'
-    replacement: ${INSTANCE_NAME}
