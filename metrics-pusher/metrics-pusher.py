@@ -12,6 +12,7 @@ def push_metrics(
     name, pushgateway_url, endpoint_name, endpoint_url, scrape_interval, user, password
 ):
     print(f"({endpoint_name}) starting collector")
+    metrics_session = requests.Session()
     session = requests.Session()
     if user is not None and password is not None:
         session.auth = (user, password)
@@ -26,7 +27,7 @@ def push_metrics(
                 f"({endpoint_name}) collecting metrics from: {endpoint_url} [{interval_offset}s]"
             )
 
-            resp = session.get(endpoint_url)
+            resp = metrics_session.get(endpoint_url)
             if resp.status_code != 200:
                 print(
                     f"({endpoint_name}) failed to collect metrics [status_code={resp.status_code}]"
