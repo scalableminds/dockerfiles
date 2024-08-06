@@ -8,10 +8,6 @@ import traceback
 import urllib.parse
 
 
-def metrics_appendix() -> str:
-    return f"# HELP metrics_pusher_last_push Last timestamp send\n# TYPE metrics_pusher_last_push counter\nmetrics_pusher_last_push {int(time.time())}"
-
-
 def push_metrics(
     name, pushgateway_url, endpoint_name, endpoint_url, scrape_interval, user, password
 ):
@@ -36,13 +32,13 @@ def push_metrics(
                     f"({endpoint_name}) failed to collect metrics [status_code={resp.status_code}]"
                 )
                 continue
-            metrics = resp.content.decode("utf-8") + "\n" + metrics_appendix()
+            metrics = resp.content
 
             job_url = f"{pushgateway_url}/metrics/job/{name}.{endpoint_name}"
             interval_offset = int(time.time()) % scrape_interval
             print(f"({endpoint_name}) put metrics to: {job_url} [{interval_offset}s]")
 
-            resp = session.put(job_url, data=metrics.encode("utf-8"))
+            resp = session.put(job_url, data=metrics)
 
             interval_offset = int(time.time()) % scrape_interval
             if resp.status_code == 200:
@@ -82,6 +78,7 @@ if __name__ == "__main__":
     print(f"{pushgateway_url=}")
     print(f"{scrape_interval=}")
     print(f"{endpoints=}")
+    print(f"{endpoints.items()}")
 
     queue = multiprocessing.Queue()
     processes = []
