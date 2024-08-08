@@ -21,6 +21,7 @@ jobs:
           - wklink
           - om-bistro
           - metrics-pusher
+          - promtail
     runs-on: ubuntu-latest
 
     steps:
