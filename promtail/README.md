@@ -23,7 +23,7 @@ Environment Variables:
 | Name | Description |
 |------|-------------|
 | `LOKI_PUSH_URL` | URL to push to (e.g. `<domain>/loki/api/v1/push`) |
-| `LOKI_PUSH_USER` | User for Basic Auth |
-| `LOKI_PUSH_PASSWORD` | Password for Basic Auth |
+| `AUTH_USER` | User for Basic Auth |
+| `AUTH_PASSWORD` | Password for Basic Auth |
 | `DOCKER_HOST` | Path to docker host (e.g. `unix:///var/run/docker.sock`) |
 | `INSTANCE_NAME` | Name of the instance |

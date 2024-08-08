@@ -3,8 +3,8 @@ server:
 clients:
 - url: ${LOKI_PUSH_URL}
   basic_auth:
-    username: ${LOKI_PUSH_USER}
-    password: ${LOKI_PUSH_PASSWORD}
+    username: ${AUTH_USER}
+    password: ${AUTH_PASSWORD}
   external_labels:
     instance: ${INSTANCE_NAME}
 scrape_configs:
