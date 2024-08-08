@@ -20,6 +20,7 @@ jobs:
           - slurm-docker-cluster
           - wklink
           - om-bistro
+          - metrics-pusher
           - promtail
     runs-on: ubuntu-latest
 
