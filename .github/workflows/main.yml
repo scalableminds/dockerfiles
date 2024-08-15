@@ -22,6 +22,7 @@ jobs:
           - om-bistro
           - metrics-pusher
           - promtail
+          - container-exporter
     runs-on: ubuntu-latest
 
     steps:
