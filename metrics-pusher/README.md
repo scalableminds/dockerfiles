@@ -5,7 +5,7 @@
 Run using docker:
 
 ```sh
-docker run --cap-add "CAP_SYS_PTRACE" \
+docker run \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /proc:/host/proc:ro \
     -e INSTANCE_NAME="foo" \
@@ -17,6 +17,8 @@ docker run --cap-add "CAP_SYS_PTRACE" \
     -e HOST_PROC_PATH="/host/proc" \
     scalableminds/metrics-pusher
 ```
+
+> *Note:* If the monitor fails with permission denied and disk read and write is 0, then add `--cap-add CAP_SYS_PTRACE` to enable necessary capabilities.
 
 This will scrape all specified endpoints and containers using the internal [Container Exporter](#container-exporter).
 

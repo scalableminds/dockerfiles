@@ -86,16 +86,17 @@ def scrape(proc_path):
                 stats = [int(s) for s in f.read().split(")")[1][3:].split(" ")]
                 f.close()
 
+                _used_mem += stats[rss]
+                _cpu_user += stats[utime] + stats[cutime]
+                _cpu_kernel += stats[stime] + stats[cstime]
+                _number_threads += stats[num_threads]
+
                 # https://www.kernel.org/doc/html/latest/filesystems/proc.html#proc-pid-io-display-the-io-accounting-fields
                 f = open(f"{proc_path}/{pid}/io", "r")
                 rchar = int(f.readline().split(" ")[1])
                 wchar = int(f.readline().split(" ")[1])
                 f.close()
 
-                _used_mem += stats[rss]
-                _cpu_user += stats[utime] + stats[cutime]
-                _cpu_kernel += stats[stime] + stats[cstime]
-                _number_threads += stats[num_threads]
                 _disk_read += rchar
                 _disk_write += wchar
             except Exception as e:
