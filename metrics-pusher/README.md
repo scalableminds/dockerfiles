@@ -5,7 +5,7 @@
 Run using docker:
 
 ```sh
-docker run --privileged \
+docker run --cap-add "CAP_SYS_PTRACE" \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /proc:/host/proc:ro \
     -e INSTANCE_NAME="foo" \
