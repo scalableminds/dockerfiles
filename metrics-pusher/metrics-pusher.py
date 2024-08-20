@@ -52,6 +52,8 @@ def push_metrics(
                 )
         except Exception as e:
             traceback.print_exception(e)
+        except KeyboardInterrupt:
+            break
 
 
 def push_container_metrics(
@@ -81,6 +83,8 @@ def push_container_metrics(
             )
         except Exception as e:
             traceback.print_exception(e)
+        except KeyboardInterrupt:
+            break
 
 
 if __name__ == "__main__":
