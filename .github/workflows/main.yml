@@ -18,6 +18,7 @@ jobs:
           - s3-proxy
           - sbt
           - slurm-docker-cluster
+          - slurm-exporter
           - wklink
           - om-bistro
           - metrics-pusher
