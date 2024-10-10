@@ -12,6 +12,8 @@ LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docke
 ARG SLURM_TAG=slurm-22-05-9-1
 ARG GOSU_VERSION=1.11
 
+COPY --from=ghcr.io/astral-sh/uv:0.4.20 /uv /bin/uv
+
 RUN set -ex \
     && dnf makecache \
     && dnf -y update \
@@ -43,10 +45,7 @@ RUN set -ex \
     && rm -rf /var/cache/yum \
     && ln -s /usr/bin/python3 /usr/bin/python
 
-RUN python3 -m pip install --upgrade pip
 
-RUN pip3 install Cython nose
-RUN python3 -m pip install -U pytest
 
 RUN set -ex \
     && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64" \
@@ -103,8 +102,6 @@ RUN chmod 600 /etc/slurm/slurm.conf
 RUN chmod 600 /etc/slurm/slurmdbd.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-
-RUN pip3 install poetry
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
