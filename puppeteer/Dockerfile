@@ -1,5 +1,4 @@
-FROM debian:bookworm-slim
-
+FROM cimg/node:18.20-browsers
 WORKDIR /usr/app
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
@@ -24,7 +23,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Enable corepack so that yarn can downloaded/installed during the CI run.
-RUN corepack enable
+RUN corepack enable yarn
 
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
