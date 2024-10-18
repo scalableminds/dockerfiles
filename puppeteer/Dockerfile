@@ -23,15 +23,14 @@ RUN chmod +x /usr/local/bin/dumb-init
 #     browser.launch({executablePath: 'google-chrome-unstable'})
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
-# Install puppeteer so it's available in the container.
-RUN corepack enable && corepack install -g yarn@^4.4.1
-RUN yarn add puppeteer@^19.7.2
+# Enable corepack so that yarn can downloaded/installed during the CI run.
+RUN corepack enable
 
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /usr/app/node_modules
+    && chown -R pptruser:pptruser /usr/app
 
 # Run everything after as non-privileged user.
 USER pptruser
