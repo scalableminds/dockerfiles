@@ -2,6 +2,9 @@ FROM cimg/node:18.20-browsers
 WORKDIR /usr/app
 USER root
 
+# Remove any existing pre-installed yarn binary. 
+RUN rm -r /opt/yarn-v${YARN_VERSION}/bin/yarn /usr/local/bin/yarn /opt/yarn-v${YARN_VERSION}/bin/yarnpkg /usr/local/bin/yarnpkg
+
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
 # installs, work.
@@ -24,7 +27,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Enable corepack so that yarn can downloaded/installed during the CI run.
-RUN corepack enable yarn
+RUN corepack enable
 
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
