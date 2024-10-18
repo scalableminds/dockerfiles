@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM debian:bookworm-slim
 
 WORKDIR /usr/app
 
@@ -6,7 +6,7 @@ WORKDIR /usr/app
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
 # installs, work.
 # Inspired by https://gist.github.com/navarroaxel/3f44927c9a3e28c25a2b30c244813e07
-RUN apt-get update && apt-get install curl gnupg -y \
+RUN apt-get update && apt-get install curl gnupg nodejs -y \
   && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
   && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
   && apt-get update \
@@ -24,7 +24,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Enable corepack so that yarn can downloaded/installed during the CI run.
-RUN corepack enable && corepack install -g yarn@^4.4.1
+RUN corepack enable
 
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
