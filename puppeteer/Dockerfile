@@ -24,8 +24,8 @@ RUN chmod +x /usr/local/bin/dumb-init
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Install puppeteer so it's available in the container.
-RUN corepack enable
-RUN yarn install puppeteer
+RUN corepack enable && corepack install -g yarn@^4.4.1
+RUN yarn add puppeteer@^19.7.2
 
 # Add user so we don't need --no-sandbox.
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
