@@ -5,13 +5,13 @@ WORKDIR /usr/app
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
 # installs, work.
 # Inspired by https://gist.github.com/navarroaxel/3f44927c9a3e28c25a2b30c244813e07
-RUN apt-get update && apt-get install curl gnupg nodejs -y \
-  && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-  && apt-get update \
-  && apt-get install google-chrome-stable -y --no-install-recommends \
-  && apt-get install -y git ssh-client --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install curl gnupg -y \
+#   && curl --location --silent https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+#   && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+#   && apt-get update \
+#   && apt-get install google-chrome-stable -y --no-install-recommends \
+#   && apt-get install -y git ssh-client --no-install-recommends \
+#   && rm -rf /var/lib/apt/lists/*
 
 # It's a good idea to use dumb-init to help prevent zombie chrome processes.
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
