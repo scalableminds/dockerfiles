@@ -10,6 +10,7 @@ jobs:
           - cronut
           - duply
           - events-relay
+          - ansible
           - helm
           - kubectl
           - netdebug
