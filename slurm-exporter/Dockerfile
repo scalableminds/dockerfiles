@@ -3,7 +3,7 @@ ARG SLURM_VERSION=24.05.3
 
 FROM cimg/go:$GO_VERSION AS builder
 
-ARG SLURM_EXPORTER_VERSION=0.21
+ARG SLURM_EXPORTER_VERSION=0.21.1
 
 WORKDIR /build
 RUN wget "https://github.com/scalableminds/prometheus-slurm-exporter/archive/refs/tags/${SLURM_EXPORTER_VERSION}.zip" && unzip "${SLURM_EXPORTER_VERSION}.zip"
