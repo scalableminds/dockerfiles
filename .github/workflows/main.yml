@@ -20,6 +20,7 @@ jobs:
           - sbt
           - slurm-docker-cluster
           - slurm-exporter
+          - slurm-python
           - wklink
           - om-bistro
           - metrics-pusher
@@ -49,7 +50,7 @@ jobs:
         fi
 
     - name: Push docker images
-      env: 
+      env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
       run: |
