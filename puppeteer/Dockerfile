@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install curl gnupg -y \
 # It's a good idea to use dumb-init to help prevent zombie chrome processes.
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
+RUN corepack enable
 
 # Uncomment to skip the chromium download when installing puppeteer. If you do,
 # you'll need to launch puppeteer with:
@@ -27,13 +28,14 @@ RUN chmod +x /usr/local/bin/dumb-init
 RUN npm i puppeteer
 
 # Add user so we don't need --no-sandbox.
-RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+RUN groupadd pptruser && useradd -g pptruser -G audio,video pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /usr/app/node_modules
 
 # Run everything after as non-privileged user.
 USER pptruser
+RUN corepack enable
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["google-chrome-unstable"]
