@@ -4,18 +4,25 @@ ARG SLURM_VERSION="24.05.4"
 ARG UV_VERSION="0.6.4"
 ARG SLURM_USER_UID=990
 ARG SLURM_USER_GID=990
+ARG MYSQL_CONFIG_VERSION="0.8.34"
 
 COPY --from=ghcr.io/astral-sh/uv:$UV_VERSION /uv /bin/uv
 
 RUN set -xe \
 	&& apt-get update \
-	&& apt-get install -y curl gnupg
+	&& apt-get install -y curl gnupg lsb-release wget
+RUN curl -Lo /tmp/mysql-apt-config.deb "https://dev.mysql.com/get/mysql-apt-config_$MYSQL_CONFIG_VERSION-1_all.deb"
+RUN set -xe \
+	&& dpkg -i /tmp/mysql-apt-config.deb \
+	&& env DEBIAN_FRONTEND="noninteractive" dpkg-reconfigure mysql-apt-config \
+	&& apt-get update \
+	&& apt-get install --yes mysql-server
 
 RUN bash -c "set -xe && for package in 'smd' 'smd-client' 'smd-slurmd' 'smd-slurmctld' 'smd-slurmdbd' 'smd-sview'; do \
 	curl -Lo \"/tmp/slurm-\${package}.deb\" https://github.com/scalableminds/slurm-packages/releases/download/${SLURM_VERSION}/slurm-\${package}_${SLURM_VERSION}-1_amd64.deb; \
 done"
-RUN bash -c "apt-get install --yes -f /tmp/*.deb"
-RUN bash -c "rm /tmp/*"
+RUN apt-get install --yes -f /tmp/*.deb
+RUN rm /tmp/*
 
 RUN set -xe \
 	&& addgroup --gid="$SLURM_USER_GID" slurm \
@@ -27,6 +34,7 @@ RUN set -xe \
         /var/lib/slurmd \
         /var/log/slurm \
         /data \
+		/run/munge \
     && touch /var/lib/slurmd/node_state \
         /var/lib/slurmd/front_end_state \
         /var/lib/slurmd/job_state \
@@ -36,7 +44,8 @@ RUN set -xe \
         /var/lib/slurmd/assoc_usage \
         /var/lib/slurmd/qos_usage \
         /var/lib/slurmd/fed_mgr_state \
-    && chown -R slurm:slurm /var/*/slurm*
+    && chown -R slurm:slurm /var/*/slurm* \
+	&& chown -R munge:munge /run/munge
 
 COPY --chown=slurm:slurm slurm.conf /etc/slurm/slurm.conf
 COPY --chown=slurm:slurm slurmdbd.conf /etc/slurm/slurmdbd.conf

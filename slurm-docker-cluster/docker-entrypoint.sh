@@ -42,7 +42,7 @@ fi
 if [ "$1" = "slurmd" ]
 then
     echo "---> Starting the MUNGE Authentication service (munged) ..."
-    setpriv --reuid=munge --regid=munge /usr/sbin/munged
+    setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
     echo "---> Waiting for slurmctld to become active before starting slurmd..."
 
