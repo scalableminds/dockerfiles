@@ -38,15 +38,6 @@ RUN set -xe \
         /var/log/slurm \
         /data \
 		/run/munge \
-    && touch /var/lib/slurmd/node_state \
-        /var/lib/slurmd/front_end_state \
-        /var/lib/slurmd/job_state \
-        /var/lib/slurmd/resv_state \
-        /var/lib/slurmd/trigger_state \
-        /var/lib/slurmd/assoc_mgr_state \
-        /var/lib/slurmd/assoc_usage \
-        /var/lib/slurmd/qos_usage \
-        /var/lib/slurmd/fed_mgr_state \
     && chown -R slurm:slurm /var/*/slurm* \
 	&& chown -R munge:munge /run/munge
 
