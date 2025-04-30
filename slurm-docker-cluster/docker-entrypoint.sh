@@ -38,7 +38,7 @@ then
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
 	while true; do
 		setpriv --reuid=slurm --regid=slurm --init-groups /usr/sbin/slurmctld -Dvvv
-		echo "slurmctl: exited with $?"
+		echo "---> slurmctl: exited with $?"
 	done
 fi
 
@@ -57,7 +57,10 @@ then
     echo "-- slurmctld is now active ..."
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
-    exec /usr/sbin/slurmd -Dvvv
+	while true; do
+		/usr/sbin/slurmd -Dvvv
+		echo "---> slurmd: exited with $?"
+	done
 fi
 
 exec "$@"
