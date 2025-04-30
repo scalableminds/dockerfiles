@@ -4,13 +4,13 @@ set -e
 if [ "$1" = "slurmdbd" ]
 then
     echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+    setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
     echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
 
     {
         . /etc/slurm/slurmdbd.conf
-        until echo "SELECT 1" | mysql -h $StorageHost -u$StorageUser -p$StoragePass 2>&1 > /dev/null
+        until echo "SELECT 1" | mysql -h "$StorageHost" -u"$StorageUser" -p"$StoragePass" 2>&1 > /dev/null
         do
             echo "-- Waiting for database to become active ..."
             sleep 2
@@ -18,13 +18,13 @@ then
     }
     echo "-- Database is now active ..."
 
-    exec gosu slurm /usr/sbin/slurmdbd -Dvvv
+    exec setpriv --reuid=slurm --regid=munge --init-groups /usr/sbin/slurmdbd -Dvvv
 fi
 
 if [ "$1" = "slurmctld" ]
 then
     echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+    setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
     echo "---> Waiting for slurmdbd to become active before starting slurmctld ..."
 
@@ -36,13 +36,13 @@ then
     echo "-- slurmdbd is now active ..."
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
-    exec gosu slurm /usr/sbin/slurmctld -Dvvv
+    exec setpriv --reuid=slurm --regid=slurm /usr/sbin/slurmctld -Dvvv
 fi
 
 if [ "$1" = "slurmd" ]
 then
     echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+    setpriv --reuid=munge --regid=munge /usr/sbin/munged
 
     echo "---> Waiting for slurmctld to become active before starting slurmd..."
 
