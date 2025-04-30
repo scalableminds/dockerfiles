@@ -1,12 +1,15 @@
+ARG UV_VERSION="0.7.0"
+
+FROM ghcr.io/astral-sh/uv:$UV_VERSION AS uv
+
 FROM debian:bookworm
 
 ARG SLURM_VERSION="24.05.4"
-ARG UV_VERSION="0.6.4"
 ARG SLURM_USER_UID=990
 ARG SLURM_USER_GID=990
 ARG MYSQL_CONFIG_VERSION="0.8.34"
 
-COPY --from=ghcr.io/astral-sh/uv:$UV_VERSION /uv /bin/uv
+COPY --from=uv /uv /bin/uv
 
 RUN set -xe \
 	&& apt-get update \
