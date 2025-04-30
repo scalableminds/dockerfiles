@@ -18,7 +18,7 @@ then
     }
     echo "-- Database is now active ..."
 
-    exec setpriv --reuid=slurm --regid=munge --init-groups /usr/sbin/slurmdbd -Dvvv
+    exec setpriv --reuid=slurm --regid=slurm --init-groups /usr/sbin/slurmdbd -Dvvv
 fi
 
 if [ "$1" = "slurmctld" ]
