@@ -36,7 +36,10 @@ then
     echo "-- slurmdbd is now active ..."
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
-    exec setpriv --reuid=slurm --regid=slurm --init-groups /usr/sbin/slurmctld -Dvvv
+	while true; do
+		setpriv --reuid=slurm --regid=slurm --init-groups /usr/sbin/slurmctld -Dvvv
+		echo "slurmctl: exited with $?"
+	done
 fi
 
 if [ "$1" = "slurmd" ]
