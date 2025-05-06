@@ -3,27 +3,35 @@ set -e
 
 if [ "$1" = "slurmdbd" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
+	set -x
+
+	{ echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
+	{ echo "---> Starting the SlurmDBD Manager Daemon ..."; } 2>/dev/null
     exec setpriv --reuid=slurm --regid=slurm --init-groups /usr/sbin/slurmdbd -D
 fi
 
 if [ "$1" = "slurmctld" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
+	set -x
+
+    { echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
-    echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
+    { echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."; } 2>/dev/null
 	exec setpriv --reuid=slurm --regid=slurm --init-groups /usr/sbin/slurmctld -D
 fi
 
 if [ "$1" = "slurmd" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
+	set -x
+
+	{ echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
-    echo "---> Starting the Slurm Node Daemon (slurmd) ..."
+    { echo "---> Starting the Slurm Node Daemon (slurmd) ..."; } 1>/dev/null
 	exec /usr/sbin/slurmd -D
 fi
 
+set -x
 exec "$@"
