@@ -31,6 +31,7 @@ then
 
     { echo "---> Create system.slice ..."; } 1>/dev/null
 	mkdir /sys/fs/cgroup/system.slice
+	echo "+cpu +memory" > /sys/fs/cgroup/system.slice/cgroup.subtree_control
 
     { echo "---> Starting the Slurm Node Daemon (slurmd) ..."; } 1>/dev/null
 	exec /usr/sbin/slurmd -D
