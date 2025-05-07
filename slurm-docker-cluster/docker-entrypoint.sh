@@ -29,6 +29,9 @@ then
 	{ echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
+    { echo "---> Create system.slice ..."; } 1>/dev/null
+	mkdir /sys/fs/cgroup/system.slice
+
     { echo "---> Starting the Slurm Node Daemon (slurmd) ..."; } 1>/dev/null
 	exec /usr/sbin/slurmd -D
 fi
