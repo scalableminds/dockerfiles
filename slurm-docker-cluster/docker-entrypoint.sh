@@ -26,12 +26,15 @@ if [ "$1" = "slurmd" ]
 then
 	set -x
 
+    { echo "---> Setup Cgroup v2 ..."; } 1>/dev/null
+	mkdir /sys/fs/cgroup/system.slice
+	# Move Root Process to new cgroup
+	echo "1" > /sys/fs/cgroup/system.slice/cgroup.procs
+	# Add cpu and memory controller to system.slice namespace
+	echo "+cpu +memory" > /sys/fs/cgroup/cgroup.subtree_control
+
 	{ echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
-
-    { echo "---> Create system.slice ..."; } 1>/dev/null
-	mkdir /sys/fs/cgroup/system.slice
-	echo "+cpu +memory" > /sys/fs/cgroup/system.slice/cgroup.subtree_control
 
     { echo "---> Starting the Slurm Node Daemon (slurmd) ..."; } 1>/dev/null
 	exec /usr/sbin/slurmd -D
