@@ -81,8 +81,11 @@ async function sendFile(filepath, res) {
   }
 }
 
+// combined - ':remote-addr - :remote-user [:data[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'
+const logFormat = ':remote-addr - :remote-user [:data[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ":referrer" ":user-agent"';
+
 const app = express();
-app.use(morgan("combined"));
+app.use(morgan(logFormat));
 
 app.get("/health", (req, res) => {
   res.end("Ok");
