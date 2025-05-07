@@ -6,8 +6,8 @@
   "author": "Norman Rzepka <norman.rzepka@scalableminds.com>",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.932.0",
-    "express": "^4.19.2",
+    "@aws-sdk/client-s3": "^3.804.0",
+    "express": "^5.1.0",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

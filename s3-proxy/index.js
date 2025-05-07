@@ -1,29 +1,31 @@
 const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
-const AWS = require("aws-sdk");
+const { S3Client, HeadObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 
 const S3_BUCKET = process.env.S3_BUCKET;
 const S3_BUCKET_PREFIX = process.env.S3_BUCKET_PREFIX || "";
+const S3_REGION = process.env.S3_REGION;
 const PORT = parseInt(process.env.PORT || "3000", 10);
 
-const s3Client = new AWS.S3();
+const s3Client = new S3Client({
+	region: S3_REGION,
+});
 
 async function fileExists(filepath) {
   const key = path.join(S3_BUCKET_PREFIX, filepath);
   try {
-    const obj = await s3Client
-      .headObject({
-        Bucket: S3_BUCKET,
-        Key: key,
-      })
-      .promise();
+    const command = new HeadObjectCommand({
+	  Bucket: S3_BUCKET,
+	  Key: key,
+    });
+    const obj = await s3Client.send(command);
     if (obj.ContentType === "application/x-directory") {
       return false;
     }
     return true;
   } catch (err) {
-    if (err.code === "NoSuchKey" || err.code === "NotFound") {
+    if (err.name === "NoSuchKey" || err.name === "NotFound") {
       return false;
     }
     console.error(err);
@@ -34,12 +36,11 @@ async function fileExists(filepath) {
 async function sendFile(filepath, res) {
   const key = path.join(S3_BUCKET_PREFIX, filepath);
   try {
-    const obj = await s3Client
-      .getObject({
-        Bucket: S3_BUCKET,
-        Key: key,
-      })
-      .promise();
+	const command = new GetObjectCommand({
+	  Bucket: S3_BUCKET,
+	  Key: key,
+	})
+    const obj = await s3Client.send(command);
     if (obj.WebsiteRedirectLocation != null) {
       if (obj.WebsiteRedirectLocation.startsWith(`/${S3_BUCKET_PREFIX}`)) {
         res.redirect(
@@ -73,7 +74,7 @@ async function sendFile(filepath, res) {
         res.set("Cache-Control", obj.CacheControl);
       }
 
-      res.send(obj.Body);
+      res.send(await obj.Body.transformToByteArray());
     }
   } catch (err) {
     console.error(err);
@@ -82,7 +83,7 @@ async function sendFile(filepath, res) {
 }
 
 // combined - ':remote-addr - :remote-user [:data[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'
-const logFormat = ':remote-addr - :remote-user [:data[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ":referrer" ":user-agent"';
+const logFormat = ':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ":referrer" ":user-agent"';
 
 const app = express();
 app.use(morgan(logFormat));
@@ -90,7 +91,7 @@ app.use(morgan(logFormat));
 app.get("/health", (req, res) => {
   res.end("Ok");
 });
-app.get("*", async (req, res) => {
+app.use(async (req, res) => {
   try {
     const justPath = decodeURI(req.path.replace(/^\//, "").replace(/\/$/, ""));
 
