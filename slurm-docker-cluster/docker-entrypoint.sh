@@ -32,8 +32,8 @@ then
 	# Move Root Process to new cgroup
 	echo "1" > /sys/fs/cgroup/init.scope/cgroup.procs
 	# Add cpu and memory controller to system.slice namespace
-	echo "+cpu +memory" > /sys/fs/cgroup/cgroup.subtree_control
-	echo "+cpu +memory" > /sys/fs/cgroup/system.slice/cgroup.subtree_control
+	echo "+cpuset +cpu +io +memory +pids" > /sys/fs/cgroup/cgroup.subtree_control
+	echo "+cpuset +cpu +io +memory +pids" > /sys/fs/cgroup/system.slice/cgroup.subtree_control
 
 	{ echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
