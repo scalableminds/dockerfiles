@@ -31,6 +31,9 @@ then
 	mkdir /sys/fs/cgroup/system.slice
 	# Move Root Process to new cgroup
 	echo "1" > /sys/fs/cgroup/init.scope/cgroup.procs
+	if [ ! "$$" = "1" ]; then
+		echo "$$" > /sys/fs/cgroup/init.scope/cgroup.procs
+	fi
 	# Add cpu and memory controller to system.slice namespace
 	echo "+cpuset +cpu +io +memory +pids" > /sys/fs/cgroup/cgroup.subtree_control
 	echo "+cpuset +cpu +io +memory +pids" > /sys/fs/cgroup/system.slice/cgroup.subtree_control
