@@ -37,9 +37,9 @@ RUN set -xe \
         /var/lib/slurmd \
         /var/log/slurm \
         /data \
-		/run/munge \
+        /run/munge \
     && chown -R slurm:slurm /var/*/slurm* \
-	&& chown -R munge:munge /run/munge
+    && chown -R munge:munge /run/munge
 
 COPY --chown=slurm:slurm slurm.conf /etc/slurm/slurm.conf
 COPY --chown=slurm:slurm slurmdbd.conf /etc/slurm/slurmdbd.conf
