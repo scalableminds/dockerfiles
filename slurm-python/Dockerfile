@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION=3.11
-ARG UV_VERSION=0.7.2
+ARG UV_VERSION=0.7.6
 
 FROM ghcr.io/astral-sh/uv:$UV_VERSION AS uv
 FROM docker.io/python:$PYTHON_VERSION
