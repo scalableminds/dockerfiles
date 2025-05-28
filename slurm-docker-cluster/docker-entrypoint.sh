@@ -41,7 +41,7 @@ then
     { echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
-    { echo "---> Starting the Slurm Node Daemon (slurmd) ..."; } 1>/dev/null
+    { echo "---> Starting the Slurm Node Daemon (slurmd) ..."; } 2>/dev/null
     exec /usr/sbin/slurmd -D
 fi
 
@@ -50,7 +50,7 @@ then
     { echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
-    { echo "---> Starting the Slurm Restd (slurmrestd) ..."; } 1>/dev/null
+    { echo "---> Starting the Slurm Restd (slurmrestd) ..."; } 2>/dev/null
 	shift 1
 	exec setpriv --reuid=slurmrestd --regid=slurmrestd --init-groups /usr/sbin/slurmrestd "$@"
 fi
