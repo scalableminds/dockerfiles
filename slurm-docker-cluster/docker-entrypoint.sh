@@ -47,6 +47,8 @@ fi
 
 if [ "$1" = "slurmrestd" ]
 then
+	set -x
+
     { echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
