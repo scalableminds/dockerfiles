@@ -7,6 +7,8 @@ FROM debian:bookworm
 ARG SLURM_VERSION="24.05.4"
 ARG SLURM_USER_UID=990
 ARG SLURM_USER_GID=990
+ARG SLURMRESTD_USER_UID=65533
+ARG SLURMRESTD_USER_GID=65533
 ARG MYSQL_CONFIG_VERSION="0.8.34"
 
 COPY --from=uv /uv /bin/uv
@@ -45,6 +47,9 @@ COPY --chown=slurm:slurm slurm.conf /etc/slurm/slurm.conf
 COPY --chown=slurm:slurm slurmdbd.conf /etc/slurm/slurmdbd.conf
 RUN chmod 600 /etc/slurm/slurm.conf
 RUN chmod 600 /etc/slurm/slurmdbd.conf
+
+RUN addgroup --gid="$SLURMRESTD_USER_GID" slurmrestd
+RUN adduser --system --uid="$SLURMRESTD_USER_UID" --ingroup slurmrestd slurmrestd
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
