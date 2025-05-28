@@ -45,5 +45,11 @@ then
     exec /usr/sbin/slurmd -D
 fi
 
+if [ "$1" = "slurmrestd" ]
+then
+	shift 1
+	exec setpriv --reuid=nobody --regid=nobody --init-groups /usr/sbin/slurmrestd
+fi
+
 set -x
 exec "$@"
