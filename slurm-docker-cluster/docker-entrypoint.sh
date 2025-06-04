@@ -47,13 +47,10 @@ fi
 
 if [ "$1" = "slurmrestd" ]
 then
+	shift 1
 	set -x
 
-    { echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
-    setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
-
     { echo "---> Starting the Slurm Restd (slurmrestd) ..."; } 2>/dev/null
-	shift 1
 	exec setpriv --reuid=slurmrestd --regid=slurmrestd --init-groups /usr/sbin/slurmrestd "$@"
 fi
 
