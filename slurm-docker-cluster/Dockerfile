@@ -1,4 +1,4 @@
-ARG UV_VERSION="0.7.0"
+ARG UV_VERSION="0.7.14"
 
 FROM ghcr.io/astral-sh/uv:$UV_VERSION AS uv
 
