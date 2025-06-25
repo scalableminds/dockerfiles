@@ -7,12 +7,14 @@ FROM docker.io/python:$PYTHON_VERSION
 ARG SLURM_VERSION="24.05.3"
 ARG SLUMR_USER_UID=990
 ARG SLURM_USER_GID=990
+ARG VOXELYTICS_USER_UID=999
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl libpq-dev
 
 # Setup Slurm User
 RUN addgroup --gid "$SLURM_USER_GID" slurm \
     && adduser --system --uid "$SLUMR_USER_UID" --ingroup slurm slurm
+RUN adduser --system --uid "$VOXELYTICS_USER_UID" --ingroup staff voxelytics
 
 # Install Slurm Client
 RUN curl -Lo /tmp/slurm-smd.deb "https://github.com/scalableminds/slurm-packages/releases/download/$SLURM_VERSION/slurm-smd_$SLURM_VERSION-1_amd64.deb" \
