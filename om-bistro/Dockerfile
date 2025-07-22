@@ -1,5 +1,4 @@
-
-FROM python:3.8-slim-buster
+FROM python:3.13.5-slim-bookworm
 
 WORKDIR /python-docker
 
@@ -10,6 +9,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-ENV FLASK_APP openmensa_server
+ENV FLASK_APP=openmensa_server
 
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
