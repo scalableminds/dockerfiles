@@ -18,12 +18,16 @@ then
     { echo "---> Starting the MUNGE Authentication service (munged) ..."; } 2>/dev/null
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
+    mkdir -p /var/spool/slurmctld
+    chown -R slurm:slurm /var/spool/slurmctld
+
     { echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."; } 2>/dev/null
     exec setpriv --reuid=slurm --regid=slurm --init-groups /usr/sbin/slurmctld -D
 fi
 
 if [ "$1" = "slurmd" ]
 then
+    shift 1
     set -x
 
     { echo "---> Setup Cgroup v2 ..."; } 2>/dev/null
@@ -42,7 +46,7 @@ then
     setpriv --reuid=munge --regid=munge --init-groups /usr/sbin/munged
 
     { echo "---> Starting the Slurm Node Daemon (slurmd) ..."; } 2>/dev/null
-    exec /usr/sbin/slurmd -D
+    exec /usr/sbin/slurmd -D "$@"
 fi
 
 if [ "$1" = "slurmrestd" ]
