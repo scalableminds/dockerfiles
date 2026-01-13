@@ -8,6 +8,9 @@ TEST_HOSTPATH="/backup_here"
 TEST_USER="none"
 TEST_PASSWORD="none"
 
+ls -alh /tmp
+lsblk
+
 # make tester container to use mounts on CircleCI
 docker run \
   --name tester \

@@ -19,10 +19,10 @@ RUN set -xe \
 	&& apt-get install -y curl gnupg lsb-release wget
 RUN curl -Lo /tmp/mysql-apt-config.deb "https://dev.mysql.com/get/mysql-apt-config_$MYSQL_CONFIG_VERSION-1_all.deb"
 RUN set -xe \
-	&& dpkg -i /tmp/mysql-apt-config.deb \
+	&& env DEBIAN_FRONTEND="noninteractive" dpkg -i /tmp/mysql-apt-config.deb \
 	&& env DEBIAN_FRONTEND="noninteractive" dpkg-reconfigure mysql-apt-config \
 	&& apt-get update \
-	&& apt-get install --yes mysql-server
+	&& env DEBIAN_FRONTEND="noninteractive" apt-get install --yes mysql-server
 
 RUN bash -c "set -xe && for package in 'smd' 'smd-client' 'smd-slurmd' 'smd-slurmctld' 'smd-slurmdbd' 'smd-slurmrestd' 'smd-sview'; do \
 	curl -Lo \"/tmp/slurm-\${package}.deb\" https://github.com/scalableminds/slurm-packages/releases/download/${SLURM_VERSION}-${DEBIAN_VERSION}/slurm-\${package}_${SLURM_VERSION}-1_amd64.deb; \
