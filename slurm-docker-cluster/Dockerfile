@@ -2,7 +2,7 @@ ARG UV_VERSION="0.7.14"
 
 FROM ghcr.io/astral-sh/uv:$UV_VERSION AS uv
 
-FROM debian:bookworm
+FROM debian:trixie
 
 ARG SLURM_VERSION="25.05.1"
 ARG SLURM_USER_UID=990
@@ -10,6 +10,7 @@ ARG SLURM_USER_GID=990
 ARG SLURMRESTD_USER_UID=65533
 ARG SLURMRESTD_USER_GID=65533
 ARG MYSQL_CONFIG_VERSION="0.8.34"
+ARG DEBIAN_VERSION="debian13"
 
 COPY --from=uv /uv /bin/uv
 
@@ -24,7 +25,7 @@ RUN set -xe \
 	&& apt-get install --yes mysql-server
 
 RUN bash -c "set -xe && for package in 'smd' 'smd-client' 'smd-slurmd' 'smd-slurmctld' 'smd-slurmdbd' 'smd-slurmrestd' 'smd-sview'; do \
-	curl -Lo \"/tmp/slurm-\${package}.deb\" https://github.com/scalableminds/slurm-packages/releases/download/${SLURM_VERSION}/slurm-\${package}_${SLURM_VERSION}-1_amd64.deb; \
+	curl -Lo \"/tmp/slurm-\${package}.deb\" https://github.com/scalableminds/slurm-packages/releases/download/${SLURM_VERSION}-${DEBIAN_VERSION}/slurm-\${package}_${SLURM_VERSION}-1_amd64.deb; \
 done"
 RUN apt-get install --yes -f /tmp/*.deb
 RUN rm /tmp/*
