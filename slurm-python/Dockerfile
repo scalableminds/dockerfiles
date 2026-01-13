@@ -9,6 +9,7 @@ ARG SLURM_VERSION="25.05.1"
 ARG SLUMR_USER_UID=990
 ARG SLURM_USER_GID=990
 ARG VOXELYTICS_USER_UID=999
+ARG DEBIAN_VERSION="debian13"
 
 RUN apt-get update && apt-get install -y curl libpq-dev
 
@@ -18,8 +19,8 @@ RUN addgroup --gid "$SLURM_USER_GID" slurm \
 RUN adduser --system --uid "$VOXELYTICS_USER_UID" --ingroup staff voxelytics
 
 # Install Slurm Client
-RUN curl -Lo /tmp/slurm-smd.deb "https://github.com/scalableminds/slurm-packages/releases/download/$SLURM_VERSION/slurm-smd_$SLURM_VERSION-1_amd64.deb" \
-    && curl -Lo /tmp/slurm-smd-client.deb "https://github.com/scalableminds/slurm-packages/releases/download/$SLURM_VERSION/slurm-smd-client_$SLURM_VERSION-1_amd64.deb" \
+RUN curl -Lo /tmp/slurm-smd.deb "https://github.com/scalableminds/slurm-packages/releases/download/$SLURM_VERSION-$DEBIAN_VERSION/slurm-smd_$SLURM_VERSION-1_amd64.deb" \
+    && curl -Lo /tmp/slurm-smd-client.deb "https://github.com/scalableminds/slurm-packages/releases/download/$SLURM_VERSION-$DEBIAN_VERSION/slurm-smd-client_$SLURM_VERSION-1_amd64.deb" \
     && apt-get install --yes -f "/tmp/slurm-smd.deb" "/tmp/slurm-smd-client.deb" \
 	&& rm /tmp/slurm-smd.deb /tmp/slurm-smd-client.deb
 
