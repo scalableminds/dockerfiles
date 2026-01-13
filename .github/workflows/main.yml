@@ -24,7 +24,7 @@ jobs:
           - om-bistro
           - metrics-pusher
           - promtail
-    runs-on: ubicloud-standard-2
+    runs-on: ubicloud-standard-4
 
     steps:
     - uses: actions/checkout@v4
