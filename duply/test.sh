@@ -9,7 +9,7 @@ TEST_USER="none"
 TEST_PASSWORD="none"
 
 ls -alh /tmp
-lsblk
+df -h
 
 # make tester container to use mounts on CircleCI
 docker run \
