@@ -1,10 +1,14 @@
 name: CI
 
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: '0 8 * * 2'
 
 jobs:
   build:
     strategy:
+      fail-fast: ${{ github.event_name != 'schedule' }}
       matrix:
         app:
           - duply
