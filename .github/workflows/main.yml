@@ -2,13 +2,14 @@ name: CI
 
 on:
   push:
+  workflow_dispatch:
   schedule:
     - cron: '0 8 * * 2'
 
 jobs:
   build:
     strategy:
-      fail-fast: ${{ github.event_name != 'schedule' }}
+      fail-fast: ${{ github.event_name == 'push' }}
       matrix:
         app:
           - duply
