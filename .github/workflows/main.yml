@@ -17,7 +17,6 @@ jobs:
           - ansible
           - helm
           - kubectl
-          - netdebug
           - nginx-proxy
           - puppeteer
           - s3-proxy
