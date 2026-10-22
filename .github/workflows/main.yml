@@ -31,7 +31,7 @@ jobs:
     runs-on: ubicloud-standard-4
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7.0.1
 
     - name: Build docker images
       working-directory: ${{ matrix.app }}
