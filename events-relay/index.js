@@ -13,47 +13,74 @@ const PORT = parseInt(process.env.PORT || "3000", 10);
 const AMPLITUDE_TARGET =
   process.env.AMPLITUDE_TARGET || "https://api2.amplitude.com/2/httpapi";
 const LOG_DIR = process.env.LOG_DIR || "./logs";
-const WELL_KNOWN_URIS_FILE =
-  process.env.WELL_KNOWN_URIS_FILE || "./well-known-uris.htpasswd";
+const WELL_KNOWN_URIS_FILE = process.env.WELL_KNOWN_URIS_FILE;
+const DEFAULT_WELL_KNOWN_URIS_FILE = "./well-known-uris.htpasswd";
 
 assert(
   fs.existsSync(LOG_DIR) && fs.statSync(LOG_DIR).isDirectory(),
   `Log dir ${LOG_DIR} is not a directory.`
 );
-assert(
-  fs.existsSync(WELL_KNOWN_URIS_FILE),
-  `Well-known URIs file ${WELL_KNOWN_URIS_FILE} does not exist.`
-);
+
+const BCRYPT_HASH = /^\$2[aby]\$(0[4-9]|[12]\d|3[01])\$[./A-Za-z0-9]{53}$/;
+const SHA_HASH = /^\{SHA\}[A-Za-z0-9+/]{27}=$/;
+const HOSTNAME = /^[a-z0-9-]+(\.[a-z0-9-]+)*$/;
+
+function normalizeHostname(hostname) {
+  return hostname.toLowerCase().replace(/\.+$/, "");
+}
 
 // htpasswd file with one `<hostname>:<hashed apiKey>` per line.
 // The hostname of `webknossos_uri` is used as user name, because
 // htpasswd user names must not contain colons.
 // Supported hashes: bcrypt ($2a$, $2b$, $2y$), {SHA} and plain text.
-function parseHtpasswd(content) {
+function parseHtpasswd(content, file) {
   const entries = new Map();
   for (const rawLine of content.split(/\r?\n/)) {
     const line = rawLine.trim();
     if (line === "" || line.startsWith("#")) continue;
     const sep = line.indexOf(":");
-    assert(sep > 0, `Invalid line in ${WELL_KNOWN_URIS_FILE}: "${line}"`);
-    const hostname = line.slice(0, sep);
+    assert(sep > 0, `Invalid line in ${file}: "${line}"`);
+    const hostname = normalizeHostname(line.slice(0, sep));
     const hash = line.slice(sep + 1);
+    assert(
+      HOSTNAME.test(hostname) && !hash.startsWith("//"),
+      `Invalid user name in ${file}: "${line.slice(0, sep)}". ` +
+        "Use the hostname of the URI, e.g. `webknossos.example.com`."
+    );
     assert(hash !== "", `Missing apiKey hash for "${hostname}".`);
     assert(
-      !hash.startsWith("$apr1$") && !/^\$[156]\$/.test(hash),
-      `Unsupported hash for "${hostname}". Use bcrypt (htpasswd -B).`
+      BCRYPT_HASH.test(hash) ||
+        SHA_HASH.test(hash) ||
+        !(hash.startsWith("$") || hash.startsWith("{")),
+      `Unsupported or malformed hash for "${hostname}". Use bcrypt (htpasswd -B).`
     );
+    assert(!entries.has(hostname), `Duplicate entry for "${hostname}".`);
     entries.set(hostname, hash);
   }
   return entries;
 }
 
-function verifyApiKey(apiKey, hash) {
-  if (typeof apiKey !== "string") return false;
-  if (/^\$2[aby]\$/.test(hash)) {
-    return bcrypt.compareSync(apiKey, hash);
+function loadWellKnownUris() {
+  const file = WELL_KNOWN_URIS_FILE || DEFAULT_WELL_KNOWN_URIS_FILE;
+  if (!fs.existsSync(file)) {
+    // Only an explicitly configured file is required to exist.
+    assert(
+      WELL_KNOWN_URIS_FILE == null,
+      `Well-known URIs file ${file} does not exist.`
+    );
+    console.warn(`No well-known URIs file at ${file}.`);
+    return new Map();
   }
-  if (hash.startsWith("{SHA}")) {
+  return parseHtpasswd(fs.readFileSync(file, "utf8"), file);
+}
+
+async function verifyApiKey(apiKey, hash) {
+  if (BCRYPT_HASH.test(hash)) {
+    // bcrypt only considers the first 72 bytes.
+    if (Buffer.byteLength(apiKey) > 72) return false;
+    return bcrypt.compare(apiKey, hash);
+  }
+  if (SHA_HASH.test(hash)) {
     return safeEqual(
       crypto.createHash("sha1").update(apiKey).digest("base64"),
       hash.slice(5)
@@ -68,27 +95,31 @@ function safeEqual(a, b) {
   return bufA.length === bufB.length && crypto.timingSafeEqual(bufA, bufB);
 }
 
-const wellKnownUris = parseHtpasswd(
-  fs.readFileSync(WELL_KNOWN_URIS_FILE, "utf8")
-);
+const wellKnownUris = loadWellKnownUris();
 console.log(`Loaded ${wellKnownUris.size} well-known URIs.`);
 
 function wellKnownUriKey(uri) {
-  try {
-    return new URL(uri).hostname;
-  } catch {
-    return String(uri);
+  for (const candidate of [uri, `http://${uri}`]) {
+    try {
+      return normalizeHostname(new URL(candidate).hostname);
+    } catch {}
   }
+  return normalizeHostname(uri);
 }
 
-// bcrypt is slow, so cache successful verifications.
-const verifiedApiKeys = new Set();
+// bcrypt is slow, so cache verification results (bounded, oldest evicted).
+const MAX_CACHED_API_KEYS = 10000;
+const apiKeyCache = new Map();
 
-function isApiKeyValid(key, apiKey) {
+async function isApiKeyValid(key, apiKey) {
+  if (typeof apiKey !== "string") return false;
   const cacheKey = `${key}\n${apiKey}`;
-  if (verifiedApiKeys.has(cacheKey)) return true;
-  const valid = verifyApiKey(apiKey, wellKnownUris.get(key));
-  if (valid) verifiedApiKeys.add(cacheKey);
+  if (apiKeyCache.has(cacheKey)) return apiKeyCache.get(cacheKey);
+  const valid = await verifyApiKey(apiKey, wellKnownUris.get(key));
+  if (apiKeyCache.size >= MAX_CACHED_API_KEYS) {
+    apiKeyCache.delete(apiKeyCache.keys().next().value);
+  }
+  apiKeyCache.set(cacheKey, valid);
   return valid;
 }
 
@@ -148,24 +179,38 @@ process.on("SIGTERM", () => {
   });
 });
 
+function getWebknossosUri(event) {
+  if (event == null || typeof event !== "object") return undefined;
+  if (event.user_properties != null) {
+    return event.user_properties.webknossos_uri;
+  }
+  if (event.userProperties != null) {
+    return event.userProperties.webknossosUri;
+  }
+  return undefined;
+}
+
 app.get("/health", (req, res) => {
   res.end("Ok");
 });
 app.post("/events", async (req, res) => {
   try {
     const reqPayload = req.body;
-    const webknossosUri =
-      reqPayload.events[0].user_properties != null
-        ? reqPayload.events[0].user_properties.webknossos_uri
-        : reqPayload.events[0].userProperties.webknossosUri;
     if (
-      reqPayload.events.some(
-        (ev) =>
-          (ev.user_properties != null
-            ? ev.user_properties.webknossos_uri
-            : ev.userProperties.webknossosUri) !== webknossosUri
-      )
+      reqPayload == null ||
+      !Array.isArray(reqPayload.events) ||
+      reqPayload.events.length === 0
     ) {
+      res.status(400).end("Expected a non-empty `events` array.");
+      return;
+    }
+    const webknossosUris = reqPayload.events.map(getWebknossosUri);
+    const webknossosUri = webknossosUris[0];
+    if (typeof webknossosUri !== "string" || webknossosUri === "") {
+      res.status(400).end("All events need a `webknossos_uri` property.");
+      return;
+    }
+    if (webknossosUris.some((uri) => uri !== webknossosUri)) {
       res
         .status(400)
         .end("All events need to have the same `webknossos_uri` property.");
@@ -174,7 +219,7 @@ app.post("/events", async (req, res) => {
     const wellKnownKey = wellKnownUriKey(webknossosUri);
     if (
       wellKnownUris.has(wellKnownKey) &&
-      !isApiKeyValid(wellKnownKey, reqPayload.api_key)
+      !(await isApiKeyValid(wellKnownKey, reqPayload.api_key))
     ) {
       res
         .status(401)
