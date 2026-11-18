@@ -5,22 +5,92 @@ const fs = require("fs");
 const { createGzip } = require("zlib");
 const path = require("path");
 const assert = require("assert");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 
 const PORT = parseInt(process.env.PORT || "3000", 10);
 
-const config = require("./config.json");
+const AMPLITUDE_TARGET =
+  process.env.AMPLITUDE_TARGET || "https://api2.amplitude.com/2/httpapi";
+const LOG_DIR = process.env.LOG_DIR || "./logs";
+const WELL_KNOWN_URIS_FILE =
+  process.env.WELL_KNOWN_URIS_FILE || "./well-known-uris.htpasswd";
+
 assert(
-  config.amplitudeTarget !== "" && config.amplitudeTarget != null,
-  "Please set a `amplitudeTarget` in the config."
+  fs.existsSync(LOG_DIR) && fs.statSync(LOG_DIR).isDirectory(),
+  `Log dir ${LOG_DIR} is not a directory.`
 );
 assert(
-  fs.existsSync(config.logDir) && fs.statSync(config.logDir).isDirectory,
-  `Log dir ${config.logDir} is not a directory.`
+  fs.existsSync(WELL_KNOWN_URIS_FILE),
+  `Well-known URIs file ${WELL_KNOWN_URIS_FILE} does not exist.`
 );
-assert(
-  config.wellKnownUris.every((u) => u.apiKey !== "" && u.uri !== ""),
-  "Please set `uri` and `apiKey` for all `wellKnownUris` in the config."
+
+// htpasswd file with one `<hostname>:<hashed apiKey>` per line.
+// The hostname of `webknossos_uri` is used as user name, because
+// htpasswd user names must not contain colons.
+// Supported hashes: bcrypt ($2a$, $2b$, $2y$), {SHA} and plain text.
+function parseHtpasswd(content) {
+  const entries = new Map();
+  for (const rawLine of content.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (line === "" || line.startsWith("#")) continue;
+    const sep = line.indexOf(":");
+    assert(sep > 0, `Invalid line in ${WELL_KNOWN_URIS_FILE}: "${line}"`);
+    const hostname = line.slice(0, sep);
+    const hash = line.slice(sep + 1);
+    assert(hash !== "", `Missing apiKey hash for "${hostname}".`);
+    assert(
+      !hash.startsWith("$apr1$") && !/^\$[156]\$/.test(hash),
+      `Unsupported hash for "${hostname}". Use bcrypt (htpasswd -B).`
+    );
+    entries.set(hostname, hash);
+  }
+  return entries;
+}
+
+function verifyApiKey(apiKey, hash) {
+  if (typeof apiKey !== "string") return false;
+  if (/^\$2[aby]\$/.test(hash)) {
+    return bcrypt.compareSync(apiKey, hash);
+  }
+  if (hash.startsWith("{SHA}")) {
+    return safeEqual(
+      crypto.createHash("sha1").update(apiKey).digest("base64"),
+      hash.slice(5)
+    );
+  }
+  return safeEqual(apiKey, hash);
+}
+
+function safeEqual(a, b) {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  return bufA.length === bufB.length && crypto.timingSafeEqual(bufA, bufB);
+}
+
+const wellKnownUris = parseHtpasswd(
+  fs.readFileSync(WELL_KNOWN_URIS_FILE, "utf8")
 );
+console.log(`Loaded ${wellKnownUris.size} well-known URIs.`);
+
+function wellKnownUriKey(uri) {
+  try {
+    return new URL(uri).hostname;
+  } catch {
+    return String(uri);
+  }
+}
+
+// bcrypt is slow, so cache successful verifications.
+const verifiedApiKeys = new Set();
+
+function isApiKeyValid(key, apiKey) {
+  const cacheKey = `${key}\n${apiKey}`;
+  if (verifiedApiKeys.has(cacheKey)) return true;
+  const valid = verifyApiKey(apiKey, wellKnownUris.get(key));
+  if (valid) verifiedApiKeys.add(cacheKey);
+  return valid;
+}
 
 const app = express();
 app.use(express.json());
@@ -37,7 +107,7 @@ function createLogFileStream() {
     String(date.getUTCSeconds()).padStart(2, "0"),
   ].join("-");
   const fileStream = fs.createWriteStream(
-    path.join(config.logDir, `${dateString}.json.log.gz`),
+    path.join(LOG_DIR, `${dateString}.json.log.gz`),
     { flags: "a" }
   );
   const gzipStream = createGzip();
@@ -101,12 +171,10 @@ app.post("/events", async (req, res) => {
         .end("All events need to have the same `webknossos_uri` property.");
       return;
     }
-    const matchesWellKnownUri = config.wellKnownUris.find(
-      (u) => u.uri === webknossosUri
-    );
+    const wellKnownKey = wellKnownUriKey(webknossosUri);
     if (
-      matchesWellKnownUri != null &&
-      matchesWellKnownUri.apiKey !== reqPayload.api_key
+      wellKnownUris.has(wellKnownKey) &&
+      !isApiKeyValid(wellKnownKey, reqPayload.api_key)
     ) {
       res
         .status(401)
@@ -119,7 +187,7 @@ app.post("/events", async (req, res) => {
     for (const event of reqPayload.events) {
       logFileStream.write(JSON.stringify(event) + "\n");
     }
-    const relayRes = await fetch(config.amplitudeTarget, {
+    const relayRes = await fetch(AMPLITUDE_TARGET, {
       method: "POST",
       headers: {
         "content-type": "application/json",
