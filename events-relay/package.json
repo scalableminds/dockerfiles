@@ -6,9 +6,10 @@
   "author": "Norman Rzepka <norman.rzepka@scalableminds.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.19.2",
-    "morgan": "^1.10.0",
-    "node-fetch": "^2.6.7"
+    "bcryptjs": "^2.4.3",
+    "express": "^4.22.3",
+    "morgan": "^1.12.1",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "prettier": "^2.3.1"
